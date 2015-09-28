@@ -2,16 +2,19 @@
   "name": "tinyflux-counter-example",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "",
+    "start": "npm run build && npm run server",
+    "server": "node server.js",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.13.3",
     "immutable": "^3.7.5",
+    "path": "^0.12.7",
     "react": "^0.13.3",
     "tinyflux": "^0.2.0"
   },

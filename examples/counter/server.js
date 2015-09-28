@@ -1,4 +1,6 @@
-var app = new require('express')();
+var express = require('express');
+var path = require('path');
+var app = new express();
 var port = 3000;
 
 app.use(express.static(path.join(__dirname, 'dist')));

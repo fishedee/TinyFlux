@@ -1,3 +1,6 @@
+import Immutable from 'immutable'
+import React from 'react'
+
 var ImmutableIs = Immutable.is.bind(Immutable);
 
 function shallowEqualImmutable(objA, objB) {
