@@ -1,0 +1,26 @@
+{
+  "name": "tinyflux",
+  "version": "1.0.0",
+  "description": "tinyflux is a flux like expect very tiny framekwork",
+  "main": "index.js",
+  "scripts": {
+    "start": "rm -rf build/* && ./node_modules/.bin/webpack",
+    "watch": "rm -rf build/* && ./node_modules/.bin/webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fishedee/TinyFlux.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fishedee/TinyFlux/issues"
+  },
+  "homepage": "https://github.com/fishedee/TinyFlux#readme",
+  "dependencies": {
+    "babel-core": "^5.8.25",
+    "babel-loader": "^5.3.2",
+    "html-webpack-plugin": "^1.6.1",
+    "webpack": "^1.12.2"
+  }
+}
