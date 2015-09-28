@@ -2,10 +2,10 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/index.js',
   output: {
   	path:'build',
-    filename: 'bundle.js'       
+    filename: 'index.js'       
   },
   module:{
     loaders: [
@@ -20,7 +20,7 @@ module.exports = {
     new HtmlWebpackPlugin({
         title: 'tinyflux',
         template: './src/index.html',
-        scriptFilename: 'bundle.js'
+        scriptFilename: 'index.js'
     })
   ]
 };
