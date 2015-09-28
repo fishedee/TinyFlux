@@ -9,11 +9,12 @@ export default class CounterComponent extends TinyFlux.Component{
 		this.connect(this.store,'counter');
 	}
 	render(){
+		let actions = this.store.getActions();
 		return (
 			<div>
 				<div>{this.state.counter}</div>
-				<button onClick={()=>this.store.increment()}>increment</button>
-				<button onClick={()=>this.store.decrement()}>decrement</button>
+				<button onClick={actions.increment}>increment</button>
+				<button onClick={actions.decrement}>decrement</button>
 			</div>
 		);
 	}

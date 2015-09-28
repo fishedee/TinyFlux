@@ -53,6 +53,7 @@ export class Component extends React.Component{
 export class Store{
 	constructor(){
 		this._listeners = new Map();
+		this._actions = new Array();
 	}
 	connect(component,target){
 		let data = this.get();
@@ -66,11 +67,22 @@ export class Store{
 	}
 	trigger(){
 		let data = this.get();
-		for( var [component,componentTarget] of this._listeners ){
-			var stateData = {};
+		for( let [component,componentTarget] of this._listeners ){
+			let stateData = {};
 			stateData[componentTarget] = data;
 			component.setState(stateData);
 		}
+	}
+	getActions(){
+		if( this._actions.length != 0 )
+			return this._actions;
+		let actions = this._actions;
+		for( let i in this ){
+			let methodName = i;
+			if( typeof(this[i]) == 'function' )
+				actions.push( this[i].bind(this) );
+		}
+		return actions;
 	}
 }
 
