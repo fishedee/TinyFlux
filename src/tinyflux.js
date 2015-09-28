@@ -54,7 +54,7 @@ export class Store{
 	constructor(){
 		this._listeners = new Map();
 		this._hasAction = false;
-		this._actions = {};
+		this._actions = new Object();
 	}
 	connect(component,target){
 		let data = this.get();
@@ -77,15 +77,14 @@ export class Store{
 	getActions(){
 		if( this._hasAction )
 			return this._actions;
-		let actions = this._actions;
 		for (let name of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
 		    let method = this[name];
 		    if (!(method instanceof Function) || method === this) 
 		    	continue;
-		    actions[name] = method.bind(this);
+		    this._actions[name] = method.bind(this);
 		}
 		this._hasAction = true;
-		return actions;
+		return this._actions;
 	}
 }
 
