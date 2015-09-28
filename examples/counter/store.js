@@ -1,4 +1,4 @@
-import TinyFlux from "../tinyflux"
+import TinyFlux from "tinyflux"
 
 export default class ToDoStore extends TinyFlux.Store{
 	constructor(){

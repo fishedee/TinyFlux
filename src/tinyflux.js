@@ -1,6 +1,3 @@
-import * as Immutable from "immutable"
-import * as React from "react"
-
 var ImmutableIs = Immutable.is.bind(Immutable);
 
 function shallowEqualImmutable(objA, objB) {
@@ -75,8 +72,6 @@ export class Store{
 }
 
 export default {
-	Component:Component,
-	Store:Store
+	Component,
+	Store
 }
-
-window.React = React;

@@ -1,7 +1,7 @@
-import ToDo from "./components/todo"
+import Component from "Component"
 import React from "react"
 
 React.render(
-	<ToDo/>,
+	<Component/>,
 	document.getElementById('app')
 );
