@@ -5,16 +5,16 @@ import Store from "./store"
 export default class CounterComponent extends TinyFlux.Component{
 	constructor(props){
 		super(props);
-		this.store = new Store();
-		this.connect(this.store,'counter');
+		var store = new Store();
+		this.connect(store,'counter');
+		this.actions = store.getActions();
 	}
 	render(){
-		let actions = this.store.getActions();
 		return (
 			<div>
 				<div>{this.state.counter}</div>
-				<button onClick={actions.increment}>increment</button>
-				<button onClick={actions.decrement}>decrement</button>
+				<button onClick={this.actions.increment}>increment</button>
+				<button onClick={this.actions.decrement}>decrement</button>
 			</div>
 		);
 	}

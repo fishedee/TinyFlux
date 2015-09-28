@@ -53,7 +53,8 @@ export class Component extends React.Component{
 export class Store{
 	constructor(){
 		this._listeners = new Map();
-		this._actions = new Array();
+		this._hasAction = false;
+		this._actions = {};
 	}
 	connect(component,target){
 		let data = this.get();
@@ -74,14 +75,16 @@ export class Store{
 		}
 	}
 	getActions(){
-		if( this._actions.length != 0 )
+		if( this._hasAction )
 			return this._actions;
 		let actions = this._actions;
-		for( let i in this ){
-			let methodName = i;
-			if( typeof(this[i]) == 'function' )
-				actions.push( this[i].bind(this) );
+		for (let name of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
+		    let method = this[name];
+		    if (!(method instanceof Function) || method === this) 
+		    	continue;
+		    actions[name] = method.bind(this);
 		}
+		this._hasAction = true;
 		return actions;
 	}
 }
