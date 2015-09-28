@@ -1,8 +1,8 @@
 {
   "name": "tinyflux",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "tinyflux is a flux like expect very tiny framekwork",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start" : "npm run build:umd && npm run build:umd:min",
     "build:umd": "webpack src/tinyflux.js dist/tinyflux.js --config webpack.config.development.js",
@@ -21,5 +21,14 @@
   "devDependencies": {
     "babel-loader": "^5.3.2",
     "webpack": "^1.12.2"
-  }
+  },
+  "npmName": "tinyflux",
+  "npmFileMap": [
+    {
+      "basePath": "/dist/",
+      "files": [
+        "*.js"
+      ]
+    }
+  ]
 }
