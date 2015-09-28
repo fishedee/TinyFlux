@@ -6,7 +6,7 @@ It is very very tiny,just 20 line source code and has no dependencies
 ### Install
 
 ```
-npm install --save TinyFlux
+npm install --save tinyflux
 ```
 
 ### Examples
@@ -44,6 +44,7 @@ export default class MyStore extends TinyFlux.Store{
 ```
 
 #### Component
+```js
 import TinyFlux from "tinyflux"
 import React from "react"
 import Store from "./store"
