@@ -25,13 +25,13 @@ class TodoItem extends Component {
   }
 
   render() {
-    console.log(this.props);
+    
     const {todo, completeTodo, deleteTodo} = this.props;
 
     let element;
     if (this.state.editing) {
       element = (
-        <TodoTextInput text={todo.text}
+        <TodoTextInput text={todo.get('text')}
                        editing={this.state.editing}
                        onSave={(text) => this.handleSave(todo.get('id'), text)} />
       );
@@ -46,7 +46,7 @@ class TodoItem extends Component {
             {todo.get('text')}
           </label>
           <button className="destroy"
-                  onClick={function(){alert("YYYYYY")}} />
+                  onClick={()=>deleteTodo(todo.get('id'))} />
         </div>
       );
     }

@@ -19,29 +19,26 @@ export default class ToDoStore extends Store{
 		this.trigger();
 	}
 	deleteTodo(id){
-		console.log(id);
 		this.todos = this.todos.filter(
 			(todo)=>todo.get('id') != id
 		);
 		this.trigger();
 	}
 	editTodo(id,text){
-		this.todos = this.todos.updateIn(
-			[id,'text'],
-			text
+		this.todos = this.todos.map(
+			(todo)=>todo.get('id')!=id?todo:todo.set('text',text)
 		);
 		this.trigger();
 	}
 	completeTodo(id){
-		this.todos = this.todos.updateIn(
-			[id,'completed'],
-			(completed)=>!completed
-		)
+		this.todos = this.todos.map(
+			(todo)=>todo.get('id')!=id?todo:todo.update('completed',(completed)=>!completed)
+		);
 		this.trigger();
 	}
 	completeAll(){
 		let areAllMarked = this.todos.every(
-			(todo)=>todo.completed
+			(todo)=>todo.get('completed')
 		);
 		this.todos = this.todos.map(
 			(todo)=>todo.set('completed',!areAllMarked)
@@ -50,7 +47,7 @@ export default class ToDoStore extends Store{
 	}
 	clearCompleted(){
 		this.todos = this.todos.filter(
-			(todo)=>todo.get('completed')==true
+			(todo)=>!todo.get('completed')
 		)
 		this.trigger();
 	}

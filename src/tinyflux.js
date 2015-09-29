@@ -45,8 +45,9 @@ export class Component extends React.Component{
 		this._stores.push( store );
 	}
 	componentWillUnmount(){
-		for( var i = 0 ; i != _stores.length ; ++i )
+		for( var i = 0 ; i != this._stores.length ; ++i )
 			this._stores[i].disconnect(this);
+		this._stores = null;
 	}
 }
 

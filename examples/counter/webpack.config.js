@@ -26,11 +26,17 @@ module.exports = {
 
 // When inside Redux repo, prefer src to compiled version.
 // You can safely delete these lines in your project.
-var tinyfluxSrc = '../../src/tinyflux.js';
+var tinyfluxSrc = __dirname+'/../../src/tinyflux.js';
+var immutableSrc = __dirname+'/node_modules/immutable/dist/immutable.js';
+var reactSrc = __dirname+'/node_modules/react/react.js';
 var fs = require('fs');
 if (fs.existsSync(tinyfluxSrc) ) {
   // Resolve Redux to source
-  module.exports.resolve = { alias: { 'tinyflux': tinyfluxSrc } };
+  module.exports.resolve = { alias: { 
+    'tinyflux': tinyfluxSrc,
+    'react':reactSrc,
+    'immutable':immutableSrc,
+  } };
   // Compile Redux from source
   module.exports.module.loaders.push({
     test: /\.js$/,

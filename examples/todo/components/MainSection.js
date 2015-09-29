@@ -6,8 +6,8 @@ import { SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE } from '../constants/TodoFilters'
 
 const TODO_FILTERS = {
   [SHOW_ALL]: () => true,
-  [SHOW_ACTIVE]: todo => !todo.completed,
-  [SHOW_COMPLETED]: todo => todo.completed
+  [SHOW_ACTIVE]: todo => !todo.get('completed'),
+  [SHOW_COMPLETED]: todo => todo.get('completed')
 };
 
 class MainSection extends Component {
@@ -17,7 +17,7 @@ class MainSection extends Component {
   }
 
   handleClearCompleted() {
-    const atLeastOneCompleted = this.props.todos.some(todo => todo.completed);
+    const atLeastOneCompleted = this.props.todos.some(todo => todo.get('completed'));
     if (atLeastOneCompleted) {
       this.props.actions.clearCompleted();
     }
@@ -64,7 +64,7 @@ class MainSection extends Component {
       todo.get('completed') ? count + 1 : count,
       0
     );
-    console.log(this.props.actions);
+    
     return (
       <section className="main">
         {this.renderToggleAll(completedCount)}

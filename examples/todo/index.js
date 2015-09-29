@@ -13,8 +13,6 @@ class App extends Component {
   	this.actions = store.getActions();
   }
   render() {
-    console.log(this.actions);
-    console.log(typeof this.actions);
     return (
       <div>
         <Header addTodo={this.actions.addTodo} />

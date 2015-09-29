@@ -133,7 +133,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'componentWillUnmount',
 			value: function componentWillUnmount() {
-				for (var i = 0; i != _stores.length; ++i) this._stores[i].disconnect(this);
+				for (var i = 0; i != this._stores.length; ++i) this._stores[i].disconnect(this);
+				this._stores = null;
 			}
 		}]);
 
