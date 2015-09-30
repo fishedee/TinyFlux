@@ -1,7 +1,7 @@
 import Immutable from 'immutable'
 import React from 'react'
 
-var ImmutableIs = Immutable.is.bind(Immutable);
+let ImmutableIs = Immutable.is.bind(Immutable);
 
 function shallowEqualImmutable(objA, objB) {
 	if (objA === objB || ImmutableIs(objA, objB)) {
@@ -13,16 +13,16 @@ function shallowEqualImmutable(objA, objB) {
 		return false;
 	}
 
-	var keysA = Object.keys(objA);
-	var keysB = Object.keys(objB);
+	let keysA = Object.keys(objA);
+	let keysB = Object.keys(objB);
 
 	if (keysA.length !== keysB.length) {
 		return false;
 	}
 
 	// Test for A's keys different from B.
-	var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
-	for (var i = 0; i < keysA.length; i++) {
+	let bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
+	for (let i = 0; i < keysA.length; i++) {
 		if (!bHasOwnProperty(keysA[i]) || !ImmutableIs(objA[keysA[i]], objB[keysA[i]])) {
 			return false;
 		}
@@ -31,65 +31,112 @@ function shallowEqualImmutable(objA, objB) {
 	return true;
 }
 
-export class Component extends React.Component{
-	constructor(props){
-		super(props);
+let TinyFluxComponentMixin = {
+	getInitialState(){
 		this._stores = [];
-	}
+		if( this.initialize )
+			this.initialize();
+		var data = {};
+		for( let singleStore of this._stores ){
+			let stateName = singleStore.stateName;
+			let storeData = singleStore.store.get();
+			if( singleStore.filter )
+				storeData = singleStore.filter( storeData );
+			data[stateName] = storeData;
+		}
+		return data;
+	},
+	connect(store,stateName){
+		let self = this;
+		let trigger = function(data){
+			let stateData = {};
+			stateData[stateName] = data;
+			self.setState(stateData);
+		};
+		store.on(trigger);
+		this._stores.push({
+			store:store,
+			trigger:trigger,
+			stateName:stateName
+		});
+		
+	},
+	connectFilter(store,stateName,filter){
+		let self = this;
+		let trigger = function(data){
+			let stateData = {};
+			stateData[stateName] = filter(data);
+			self.setState(stateData);
+		};
+		store.on(trigger);
+		this._stores.push({
+			store:store,
+			trigger:trigger,
+			stateName:stateName,
+			filter:filter
+		});
+	},
 	shouldComponentUpdate(nextProps, nextState) {
-	    return !shallowEqualImmutable(this.props, nextProps) ||
-	           !shallowEqualImmutable(this.state, nextState);
-	}
-	connect(store,target){
-		store.connect(this,target);
-		this._stores.push( store );
-	}
+		return !shallowEqualImmutable(this.props, nextProps) ||
+			!shallowEqualImmutable(this.state, nextState);
+	},
 	componentWillUnmount(){
-		for( var i = 0 ; i != this._stores.length ; ++i )
-			this._stores[i].disconnect(this);
+		for( let singleStore of this._stores ){
+			singleStore.store.off(singleStore.trigger);
+		}
 		this._stores = null;
 	}
+};
+
+export function createComponent(proto){
+	if( !proto.mixins ){
+		proto.mixins = [];
+	}
+	proto.mixins.push(TinyFluxComponentMixin);
+	return React.createClass(proto);
 }
 
-export class Store{
-	constructor(){
-		this._listeners = new Map();
-		this._hasAction = false;
-		this._actions = new Object();
+export function createStore(proto){
+	//init store 
+	proto.on = function(listener){
+		this._listeners.add(listener);
 	}
-	connect(component,target){
+	proto.off = function(listener){
+		this._listeners.delete(listener);
+	}
+	proto.trigger = function(){
 		let data = this.get();
-		this._listeners.set(component,target);
-		if( !component.state )
-			component.state = {};
-		component.state[target] = data;
-	}
-	disconnect(component){
-		this._listeners.remove(component);
-	}
-	trigger(){
-		let data = this.get();
-		for( let [component,componentTarget] of this._listeners ){
-			let stateData = {};
-			stateData[componentTarget] = data;
-			component.setState(stateData);
+		for( let listener of this._listeners ){
+			listener(data);
 		}
 	}
-	getActions(){
-		if( this._hasAction )
-			return this._actions;
-		for (let name of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
-		    let method = this[name];
-		    if (!(method instanceof Function) || method === this) 
-		    	continue;
-		    this._actions[name] = method.bind(this);
-		}
-		this._hasAction = true;
-		return this._actions;
+	function StoreClass(){
+		this._listeners = new Set();
+		if( this.initialize )
+			this.initialize();
 	}
+	StoreClass.prototype = proto;
+	let store = new StoreClass();
+	//init store action
+	let storeAction = {};
+	storeAction.on = store.on.bind(store);
+	storeAction.off = store.off.bind(store);
+	storeAction.get = store.get.bind(store);
+	for( let methodName in store ){
+		let methodResult = store[methodName];
+		if( typeof methodResult != 'function' )
+			continue;
+		if( methodName.substr(0,2) != 'on' )
+			continue;
+		if( methodName.substr(2).length == 0 )
+			continue;
+		let actionName = methodName.substr(2,1).toLowerCase() + methodName.substr(3);
+		storeAction[actionName] = methodResult.bind(store);
+	}
+	return storeAction;
 }
 
 export default {
-	Component,
-	Store
+	createComponent,
+	createStore
 }

@@ -1,26 +1,23 @@
 import React, { PropTypes } from 'react';
-import {Component} from 'tinyflux';
+import TinyFlux from 'tinyflux';
 import Header from './components/Header';
 import MainSection from './components/MainSection';
 import TodoStore from './stores/TodoStore';
 import 'todomvc-app-css/index.css';
 
-class App extends Component {
-  constructor(props){
-  	super(props)
-  	var store = new TodoStore();
-  	this.connect(store,'todos');
-  	this.actions = store.getActions();
-  }
+let App = TinyFlux.createComponent({
+  initialize(){
+  	this.connect(TodoStore,'todos');
+  },
   render() {
     return (
       <div>
-        <Header addTodo={this.actions.addTodo} />
-        <MainSection todos={this.state.todos} actions={this.actions} />
+        <Header addTodo={TodoStore.addTodo} />
+        <MainSection todos={this.state.todos} actions={TodoStore} />
       </div>
     );
   }
-}
+});
 
 React.render(
 	<App/>,

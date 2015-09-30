@@ -1,12 +1,11 @@
-import {Store} from "tinyflux";
+import TinyFlux from "tinyflux";
 import Immutable from "immutable";
 
-export default class ToDoStore extends Store{
-	constructor(){
-		super();
+export default TinyFlux.createStore({
+	initialize(){
 		this.todos = Immutable.fromJS([]);
-	}
-	addTodo(text){
+	},
+	onAddTodo(text){
 		let id = this.todos.reduce(
 			(maxId,todo)=>Math.max(maxId,todo.get('id')),
 			-1
@@ -17,26 +16,26 @@ export default class ToDoStore extends Store{
 			completed:false
 		}));
 		this.trigger();
-	}
-	deleteTodo(id){
+	},
+	onDeleteTodo(id){
 		this.todos = this.todos.filter(
 			(todo)=>todo.get('id') != id
 		);
 		this.trigger();
-	}
-	editTodo(id,text){
+	},
+	onEditTodo(id,text){
 		this.todos = this.todos.map(
 			(todo)=>todo.get('id')!=id?todo:todo.set('text',text)
 		);
 		this.trigger();
-	}
-	completeTodo(id){
+	},
+	onCompleteTodo(id){
 		this.todos = this.todos.map(
 			(todo)=>todo.get('id')!=id?todo:todo.update('completed',(completed)=>!completed)
 		);
 		this.trigger();
-	}
-	completeAll(){
+	},
+	onCompleteAll(){
 		let areAllMarked = this.todos.every(
 			(todo)=>todo.get('completed')
 		);
@@ -44,14 +43,14 @@ export default class ToDoStore extends Store{
 			(todo)=>todo.set('completed',!areAllMarked)
 		);
 		this.trigger();
-	}
-	clearCompleted(){
+	},
+	onClearCompleted(){
 		this.todos = this.todos.filter(
 			(todo)=>!todo.get('completed')
 		)
 		this.trigger();
-	}
+	},
 	get(){
 		return this.todos;
 	}
-}
+});

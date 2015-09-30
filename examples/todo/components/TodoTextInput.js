@@ -1,14 +1,13 @@
 import React, { PropTypes } from 'react';
-import {Component} from 'tinyflux';
+import TinyFlux from 'tinyflux';
 import classnames from 'classnames';
 
-class TodoTextInput extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
+let TodoTextInput = TinyFlux.createComponent({
+  getInitialState() {
+    return {
       text: this.props.text || ''
     };
-  }
+  },
 
   handleSubmit(e) {
     const text = e.target.value.trim();
@@ -18,17 +17,17 @@ class TodoTextInput extends Component {
         this.setState({ text: '' });
       }
     }
-  }
+  },
 
   handleChange(e) {
     this.setState({ text: e.target.value });
-  }
+  },
 
   handleBlur(e) {
     if (!this.props.newTodo) {
       this.props.onSave(e.target.value);
     }
-  }
+  },
 
   render() {
     return (
@@ -41,19 +40,11 @@ class TodoTextInput extends Component {
         placeholder={this.props.placeholder}
         autoFocus="true"
         value={this.state.text}
-        onBlur={this.handleBlur.bind(this)}
-        onChange={this.handleChange.bind(this)}
-        onKeyDown={this.handleSubmit.bind(this)} />
+        onBlur={this.handleBlur}
+        onChange={this.handleChange}
+        onKeyDown={this.handleSubmit} />
     );
   }
-}
-
-TodoTextInput.propTypes = {
-  onSave: PropTypes.func.isRequired,
-  text: PropTypes.string,
-  placeholder: PropTypes.string,
-  editing: PropTypes.bool,
-  newTodo: PropTypes.bool
-};
+});
 
 export default TodoTextInput;

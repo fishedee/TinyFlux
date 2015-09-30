@@ -1,19 +1,18 @@
 import TinyFlux from "tinyflux"
 
-export default class ToDoStore extends TinyFlux.Store{
-	constructor(){
-		super();
+export default TinyFlux.createStore({
+	initialize(){
 		this.counter = 0;
-	}
-	increment(){
+	},
+	onIncrement(){
 		this.counter++;
 		this.trigger();
-	}
-	decrement(){
+	},
+	onDecrement(){
 		this.counter--;
 		this.trigger();
-	}
+	},
 	get(){
 		return this.counter;
 	}
-}
+});

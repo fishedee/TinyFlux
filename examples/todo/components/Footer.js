@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import {Component} from 'tinyflux';
+import TinyFlux from 'tinyflux';
 import classnames from 'classnames';
 import { SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE } from '../constants/TodoFilters';
 
@@ -9,7 +9,7 @@ const FILTER_TITLES = {
   [SHOW_COMPLETED]: 'Completed'
 };
 
-class Footer extends Component {
+let Footer = TinyFlux.createComponent({
   renderTodoCount() {
     const { activeCount } = this.props;
     const itemWord = activeCount === 1 ? 'item' : 'items';
@@ -19,7 +19,7 @@ class Footer extends Component {
         <strong>{activeCount || 'No'}</strong> {itemWord} left
       </span>
     );
-  }
+  },
 
   renderFilterLink(filter) {
     const title = FILTER_TITLES[filter];
@@ -32,7 +32,7 @@ class Footer extends Component {
         {title}
       </a>
     );
-  }
+  },
 
   renderClearButton() {
     const { completedCount, onClearCompleted } = this.props;
@@ -44,7 +44,7 @@ class Footer extends Component {
         </button>
       );
     }
-  }
+  },
 
   render() {
     return (
@@ -61,14 +61,6 @@ class Footer extends Component {
       </footer>
     );
   }
-}
-
-Footer.propTypes = {
-  completedCount: PropTypes.number.isRequired,
-  activeCount: PropTypes.number.isRequired,
-  filter: PropTypes.string.isRequired,
-  onClearCompleted: PropTypes.func.isRequired,
-  onShow: PropTypes.func.isRequired
-};
+});
 
 export default Footer;

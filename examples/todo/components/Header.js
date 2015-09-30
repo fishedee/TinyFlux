@@ -1,28 +1,24 @@
 import React, { PropTypes } from 'react';
-import {Component} from 'tinyflux';
+import TinyFlux from 'tinyflux';
 import TodoTextInput from './TodoTextInput';
 
-class Header extends Component {
+let Header = TinyFlux.createComponent({
   handleSave(text) {
     if (text.length !== 0) {
       this.props.addTodo(text);
     }
-  }
+  },
 
   render() {
     return (
       <header className="header">
           <h1>todos</h1>
           <TodoTextInput newTodo
-                         onSave={this.handleSave.bind(this)}
+                         onSave={this.handleSave}
                          placeholder="What needs to be done?" />
       </header>
     );
   }
-}
-
-Header.propTypes = {
-  addTodo: PropTypes.func.isRequired
-};
+});
 
 export default Header;

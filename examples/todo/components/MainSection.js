@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import {Component} from 'tinyflux';
+import TinyFlux from 'tinyflux';
 import TodoItem from './TodoItem';
 import Footer from './Footer';
 import { SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE } from '../constants/TodoFilters';
@@ -10,22 +10,23 @@ const TODO_FILTERS = {
   [SHOW_COMPLETED]: todo => todo.get('completed')
 };
 
-class MainSection extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = { filter: SHOW_ALL };
-  }
+let MainSection = TinyFlux.createComponent({
+  getInitialState() {
+    return { 
+      filter: SHOW_ALL 
+    };
+  },
 
   handleClearCompleted() {
     const atLeastOneCompleted = this.props.todos.some(todo => todo.get('completed'));
     if (atLeastOneCompleted) {
       this.props.actions.clearCompleted();
     }
-  }
+  },
 
   handleShow(filter) {
     this.setState({ filter });
-  }
+  },
 
   renderToggleAll(completedCount) {
     const { todos, actions } = this.props;
@@ -37,7 +38,7 @@ class MainSection extends Component {
                onChange={actions.completeAll} />
       );
     }
-  }
+  },
 
   renderFooter(completedCount) {
     const { todos } = this.props;
@@ -49,11 +50,11 @@ class MainSection extends Component {
         <Footer completedCount={completedCount}
                 activeCount={activeCount}
                 filter={filter}
-                onClearCompleted={this.handleClearCompleted.bind(this)}
-                onShow={this.handleShow.bind(this)} />
+                onClearCompleted={this.handleClearCompleted}
+                onShow={this.handleShow} />
       );
     }
-  }
+  },
 
   render() {
     const { todos, actions } = this.props;
@@ -77,11 +78,6 @@ class MainSection extends Component {
       </section>
     );
   }
-}
-
-MainSection.propTypes = {
-  todos: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired
-};
+});
 
 export default MainSection;
