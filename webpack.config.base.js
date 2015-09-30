@@ -13,6 +13,10 @@ module.exports = {
     libraryTarget: 'umd'
   },
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['', '.js'],
+  },
+  externals: {
+    "react":'React',
+    "immutable":'Immutable'
   }
 };
