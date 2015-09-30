@@ -1,7 +1,7 @@
 # [TinyFlux](https://github.com/fishedee/TinyFlux)
 TinyFlux is a predictable state container for JavaScript apps. 
 
-It is very very tiny,just 20 line source code and has no dependencies
+This is async sample by tinyflux
 
 ### Install
 

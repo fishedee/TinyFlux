@@ -1,7 +1,7 @@
 # [TinyFlux](https://github.com/fishedee/TinyFlux)
 TinyFlux is a predictable state container for JavaScript apps. 
 
-It is very very tiny,just 100 line source code and has no dependencies
+It is very very tiny,just 150 line source code and has no dependencies
 
 ### Install
 
@@ -12,6 +12,8 @@ npm install --save tinyflux
 ### Examples
 
 * [Counter](https://github.com/fishedee/TinyFlux/tree/master/examples/counter) ([source](https://github.com/fishedee/TinyFlux/tree/master/examples/counter))
+* [Todo](https://github.com/fishedee/TinyFlux/tree/master/examples/todo) ([source](https://github.com/fishedee/TinyFlux/tree/master/examples/todo))
+* [Async](https://github.com/fishedee/TinyFlux/tree/master/examples/async) ([source](https://github.com/fishedee/TinyFlux/tree/master/examples/async))
 
 ### How To Use
 ONLY 1 MINUTE , YOU KNOW EVERYTHING ABOUT TINYFLUX
@@ -20,27 +22,26 @@ ONLY 1 MINUTE , YOU KNOW EVERYTHING ABOUT TINYFLUX
 ```js
 import TinyFlux from 'tinyflux';
 
-//1.create Class extends from TinyFlux.Store
+//1.create Store by TinyFlux.createStore
 //2.set your get function
-//3.set your action function and call trigger when data change
+//3.set your action function (must be start with on) and call trigger when data change
 //ok that's all
-export default class MyStore extends TinyFlux.Store{
-	constructor(){
-		super();
+export default TinyFlux.createStore({
+	initialize(){
 		this.counter = 0;
-	}
-	increment(){
+	},
+	onIncrement(){
 		this.counter++;
 		this.trigger();
-	}
-	decrement(){
+	},
+	onDecrement(){
 		this.counter--;
 		this.trigger();
-	}
+	},
 	get(){
 		return this.counter;
 	}
-}
+});
 ```
 
 #### Component
@@ -49,27 +50,24 @@ import TinyFlux from "tinyflux"
 import React from "react"
 import Store from "./store"
 
-//1.create Class extends from TinyFlux.Component
-//2.create your store and connect to component
-//3.call action method when you change
+//1.create Component by TinyFlux.createComponent
+//2.connect your store to your component
+//3.set action when event trigger
 //ok that's all
-export default class CounterComponent extends TinyFlux.Component{
-	constructor(props){
-		super(props);
-		var store = new Store();
+export default TinyFlux.createComponent({
+	initialize(){
 		this.connect(store,'counter');
-		this.actions = store.getActions();
-	}
+	},
 	render(){
 		return (
 			<div>
 				<div>{this.state.counter}</div>
-				<button onClick={this.actions.increment}>increment</button>
-				<button onClick={this.actions.decrement}>decrement</button>
+				<button onClick={Store.increment}>increment</button>
+				<button onClick={Store.decrement}>decrement</button>
 			</div>
 		);
 	}
-}
+});
 ```
 
 ### License
