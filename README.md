@@ -3,6 +3,38 @@ TinyFlux is a predictable state container for JavaScript apps.
 
 It is very very tiny,just 150 line source code and has no dependencies
 
+You can read an overview of ReFlux [here](https://github.com/reflux/refluxjs)
+
+```
+╔═════════╗       ╔════════╗       ╔═════════════════╗
+║ Actions ║──────>║ Stores ║──────>║ View Components ║
+╚═════════╝       ╚════════╝       ╚═════════════════╝
+     ^                                      │
+     └──────────────────────────────────────┘
+
+```
+Hower when we write more reflux , we will find action is more unnecessary.
+
+action is almost equal the store method!
+
+we always copy store method to action for declare action,so unnecessary.
+
+```
+╔════════╗       ╔═════════════════╗
+║ Stores ║──────>║ View Components ║
+╚════════╝       ╚═════════════════╝
+     ^                   │
+     └───────────────────┘
+
+```
+So this is the tinyflux architecture
+
+we no longer declare action ever
+
+action is generate by store method!
+
+less is more!
+
 ### Install
 
 ```
