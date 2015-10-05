@@ -106,14 +106,37 @@ export function createStore(proto){
 	}
 	proto.trigger = function(){
 		let data = this.get();
+		if( ImmutableIs(data,this._data) )
+			return;
+		this._data = data;
 		for( let listener of this._listeners ){
 			listener(data);
 		}
+	}
+	proto.connect = function(store,stateName){
+		let trigger = (data)=>{
+			this[stateName] = data;
+			this.trigger();
+		};
+		store.on(trigger);
+		this[stateName] = store.get();
+	}
+	proto.connectFilter = function(store,stateName,filter){
+		let trigger = (data)=>{
+			this[stateName] = filter(data);
+			this.trigger();
+		};
+		store.on(trigger);
+		this[stateName] = filter(store.get());
+	}
+	proto._get = function(){
+		return this._data;
 	}
 	function StoreClass(){
 		this._listeners = new Set();
 		if( this.initialize )
 			this.initialize();
+		this._data = this.get();
 	}
 	StoreClass.prototype = proto;
 	let store = new StoreClass();
@@ -121,7 +144,7 @@ export function createStore(proto){
 	let storeAction = {};
 	storeAction.on = store.on.bind(store);
 	storeAction.off = store.off.bind(store);
-	storeAction.get = store.get.bind(store);
+	storeAction.get = store._get.bind(store);
 	for( let methodName in store ){
 		let methodResult = store[methodName];
 		if( typeof methodResult != 'function' )

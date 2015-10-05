@@ -216,6 +216,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 		proto.trigger = function () {
 			var data = this.get();
+			if (ImmutableIs(data, this._data)) return;
+			this._data = data;
 			var _iteratorNormalCompletion3 = true;
 			var _didIteratorError3 = false;
 			var _iteratorError3 = undefined;
@@ -241,9 +243,33 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		};
+		proto.connect = function (store, stateName) {
+			var _this = this;
+
+			var trigger = function trigger(data) {
+				_this[stateName] = data;
+				_this.trigger();
+			};
+			store.on(trigger);
+			this[stateName] = store.get();
+		};
+		proto.connectFilter = function (store, stateName, filter) {
+			var _this2 = this;
+
+			var trigger = function trigger(data) {
+				_this2[stateName] = filter(data);
+				_this2.trigger();
+			};
+			store.on(trigger);
+			this[stateName] = filter(store.get());
+		};
+		proto._get = function () {
+			return this._data;
+		};
 		function StoreClass() {
 			this._listeners = new Set();
 			if (this.initialize) this.initialize();
+			this._data = this.get();
 		}
 		StoreClass.prototype = proto;
 		var store = new StoreClass();
@@ -251,7 +277,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var storeAction = {};
 		storeAction.on = store.on.bind(store);
 		storeAction.off = store.off.bind(store);
-		storeAction.get = store.get.bind(store);
+		storeAction.get = store._get.bind(store);
 		for (var methodName in store) {
 			var methodResult = store[methodName];
 			if (typeof methodResult != 'function') continue;
