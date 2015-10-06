@@ -101,7 +101,7 @@ function createStore(proto){
 			return;
 		this._data = data;
 		for( let listener of this._listeners ){
-			listener(data);
+			setTimeout(()=>listener(data),0);
 		}
 	}
 	proto.connect = function(store,stateName){

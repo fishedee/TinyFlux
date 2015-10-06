@@ -201,10 +201,16 @@ return /******/ (function(modules) { // webpackBootstrap
 			var _iteratorError3 = undefined;
 
 			try {
-				for (var _iterator3 = this._listeners[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+				var _loop = function () {
 					var listener = _step3.value;
 
-					listener(data);
+					setTimeout(function () {
+						return listener(data);
+					}, 0);
+				};
+
+				for (var _iterator3 = this._listeners[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+					_loop();
 				}
 			} catch (err) {
 				_didIteratorError3 = true;
