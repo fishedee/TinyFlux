@@ -1,6 +1,5 @@
 import 'babel-core/polyfill';
 import React from 'react';
-import TinyFlux from 'tinyflux';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 import { Router, Route } from 'react-router';
 import App from './components/App';

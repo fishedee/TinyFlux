@@ -2,7 +2,8 @@ import TinyFlux from "tinyflux"
 import React from "react"
 import Store from "./store"
 
-export default TinyFlux.createComponent({
+export default React.createClass({
+	mixins:[TinyFlux.ComponentMixin],
 	initialize(){
 		this.connect(Store,'counter');
 	},

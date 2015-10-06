@@ -16,7 +16,6 @@ module.exports = {
     extensions: ['', '.js'],
   },
   externals: {
-    "react":'React',
     "immutable":'Immutable'
   }
 };

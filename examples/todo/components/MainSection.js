@@ -10,7 +10,8 @@ const TODO_FILTERS = {
   [SHOW_COMPLETED]: todo => todo.get('completed')
 };
 
-let MainSection = TinyFlux.createComponent({
+let MainSection = React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   getInitialState() {
     return { 
       filter: SHOW_ALL 

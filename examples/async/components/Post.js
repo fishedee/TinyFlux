@@ -1,7 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import TinyFlux from 'tinyflux';
 
-export default TinyFlux.createComponent({
+export default React.createClass({
+	mixins:[TinyFlux.ComponentMixin],
   render() {
     return (
       <ul>

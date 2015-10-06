@@ -6,7 +6,8 @@ import User from '../components/User';
 import Repo from '../components/Repo';
 import List from '../components/List';
 
-let UserPage = TinyFlux.createComponent({
+let UserPage = React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   initialize() {
     this.connectFilter(UserStore,'user',(data)=>{
       const { name } = this.props;
@@ -61,7 +62,8 @@ let UserPage = TinyFlux.createComponent({
   }
 });
 
-export default TinyFlux.createComponent({
+export default React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   render:function(){
     const { login } = this.props.params;
     return (

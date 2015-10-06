@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 import TinyFlux from 'tinyflux';
 import classnames from 'classnames';
 
-let TodoTextInput = TinyFlux.createComponent({
+let TodoTextInput = React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   getInitialState() {
     return {
       text: this.props.text || ''

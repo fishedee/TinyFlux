@@ -6,7 +6,8 @@ import Repo from '../components/Repo';
 import User from '../components/User';
 import List from '../components/List';
 
-let RepoPage = TinyFlux.createComponent({
+let RepoPage = React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   initialize(){
     this.connectFilter(StargazerStore,'stargazer',(data)=>{
       const { fullName } = this.props;
@@ -60,7 +61,8 @@ let RepoPage = TinyFlux.createComponent({
   }
 });
 
-export default TinyFlux.createComponent({
+export default React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   render:function(){
     const { login, name } = this.props.params;
     let fullName = login+"/"+name;

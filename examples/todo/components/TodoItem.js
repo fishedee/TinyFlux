@@ -3,7 +3,8 @@ import TinyFlux from 'tinyflux';
 import classnames from 'classnames';
 import TodoTextInput from './TodoTextInput';
 
-let TodoItem = TinyFlux.createComponent({
+let TodoItem = React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   getInitialState() {
     return {
       editing: false

@@ -5,7 +5,8 @@ import MainSection from './components/MainSection';
 import TodoStore from './stores/TodoStore';
 import 'todomvc-app-css/index.css';
 
-let App = TinyFlux.createComponent({
+let App = React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   initialize(){
   	this.connect(TodoStore,'todos');
   },

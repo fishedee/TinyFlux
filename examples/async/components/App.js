@@ -5,7 +5,8 @@ import Posts from './Post';
 import RedditStore from '../stores/RedditStore';
 import Immutable from 'immutable';
 
-var Items = TinyFlux.createComponent({
+var Items = React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   initialize() {
     this.connectFilter(
       RedditStore,
@@ -64,7 +65,8 @@ var Items = TinyFlux.createComponent({
   }
 });
 
-export default TinyFlux.createComponent({
+export default React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   getInitialState(){
     return {
       selectedReddit:'reactjs'

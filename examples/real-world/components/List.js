@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import TinyFlux from 'tinyflux';
 
-export default TinyFlux.createComponent({
+export default React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   renderLoadMore() {
     const { isFetching, onLoadMoreClick } = this.props;
     return (

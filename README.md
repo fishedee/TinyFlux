@@ -87,7 +87,8 @@ import Store from "./store"
 //2.connect your store to your component
 //3.set action when event trigger
 //ok that's all
-export default TinyFlux.createComponent({
+export default React.createClass({
+	mixins:[TinyFlux.ComponentMixin],
 	initialize(){
 		this.connect(store,'counter');
 	},

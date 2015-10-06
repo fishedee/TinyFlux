@@ -9,7 +9,8 @@ const FILTER_TITLES = {
   [SHOW_COMPLETED]: 'Completed'
 };
 
-let Footer = TinyFlux.createComponent({
+let Footer = React.createClass({
+  mixins:[TinyFlux.ComponentMixin],
   renderTodoCount() {
     const { activeCount } = this.props;
     const itemWord = activeCount === 1 ? 'item' : 'items';

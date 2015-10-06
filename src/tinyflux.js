@@ -1,5 +1,4 @@
 import Immutable from 'immutable'
-import React from 'react'
 
 let ImmutableIs = Immutable.is.bind(Immutable);
 
@@ -31,7 +30,7 @@ function shallowEqualImmutable(objA, objB) {
 	return true;
 }
 
-let TinyFluxComponentMixin = {
+let ComponentMixin = {
 	getInitialState(){
 		this._stores = [];
 		if( this.initialize )
@@ -87,14 +86,6 @@ let TinyFluxComponentMixin = {
 		this._stores = null;
 	}
 };
-
-export function createComponent(proto){
-	if( !proto.mixins ){
-		proto.mixins = [];
-	}
-	proto.mixins.push(TinyFluxComponentMixin);
-	return React.createClass(proto);
-}
 
 export function createStore(proto){
 	//init store 
@@ -160,6 +151,6 @@ export function createStore(proto){
 }
 
 export default {
-	createComponent,
-	createStore
+	createStore,
+	ComponentMixin
 }
