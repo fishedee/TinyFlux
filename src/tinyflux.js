@@ -1,4 +1,4 @@
-import Immutable from 'immutable'
+let Immutable = require('immutable');
 
 let ImmutableIs = Immutable.is.bind(Immutable);
 
@@ -87,7 +87,7 @@ let ComponentMixin = {
 	}
 };
 
-export function createStore(proto){
+function createStore(proto){
 	//init store 
 	proto.on = function(listener){
 		this._listeners.add(listener);
@@ -150,7 +150,7 @@ export function createStore(proto){
 	return storeAction;
 }
 
-export default {
+module.exports = {
 	createStore,
 	ComponentMixin
-}
+};

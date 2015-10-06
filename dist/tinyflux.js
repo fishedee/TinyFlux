@@ -56,18 +56,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	exports.createStore = createStore;
+	var Immutable = __webpack_require__(1);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _immutable = __webpack_require__(1);
-
-	var _immutable2 = _interopRequireDefault(_immutable);
-
-	var ImmutableIs = _immutable2['default'].is.bind(_immutable2['default']);
+	var ImmutableIs = Immutable.is.bind(Immutable);
 
 	function shallowEqualImmutable(objA, objB) {
 		if (objA === objB || ImmutableIs(objA, objB)) {
@@ -276,7 +267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		return storeAction;
 	}
 
-	exports['default'] = {
+	module.exports = {
 		createStore: createStore,
 		ComponentMixin: ComponentMixin
 	};
