@@ -93,7 +93,7 @@ export default TinyFlux.createStore({
 		    	}
 		    });
 	},
-	get(){
+	getData(){
 		return this.data;
 	}
 });

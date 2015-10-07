@@ -56,6 +56,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
 	var Immutable = __webpack_require__(1);
 
 	var ImmutableIs = Immutable.is.bind(Immutable);
@@ -89,21 +91,42 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ComponentMixin = {
 		getInitialState: function getInitialState() {
-			this._stores = [];
+			this._stores = new Map();
 			if (this.initialize) this.initialize();
 			var data = {};
+			if (this.getData) data = this.getData();
+			return data;
+		},
+		listen: function listen(store) {
+			var _this = this;
+
+			if (this._stores.has(store)) return;
+
+			var trigger = function trigger() {
+				if (_this.getData) {
+					var data = _this.getData();
+					_this.setState(data);
+				}
+			};
+			store.on(trigger);
+			this._stores.set(store, trigger);
+		},
+		shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+			return !shallowEqualImmutable(this.props, nextProps) || !shallowEqualImmutable(this.state, nextState);
+		},
+		componentWillUnmount: function componentWillUnmount() {
 			var _iteratorNormalCompletion = true;
 			var _didIteratorError = false;
 			var _iteratorError = undefined;
 
 			try {
 				for (var _iterator = this._stores[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-					var singleStore = _step.value;
+					var _step$value = _slicedToArray(_step.value, 2);
 
-					var stateName = singleStore.stateName;
-					var storeData = singleStore.store.get();
-					if (singleStore.filter) storeData = singleStore.filter(storeData);
-					data[stateName] = storeData;
+					var singleStore = _step$value[0];
+					var singleTrigger = _step$value[1];
+
+					singleStore.off(singleTrigger);
 				}
 			} catch (err) {
 				_didIteratorError = true;
@@ -116,66 +139,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				} finally {
 					if (_didIteratorError) {
 						throw _iteratorError;
-					}
-				}
-			}
-
-			return data;
-		},
-		connect: function connect(store, stateName) {
-			var self = this;
-			var trigger = function trigger(data) {
-				var stateData = {};
-				stateData[stateName] = data;
-				self.setState(stateData);
-			};
-			store.on(trigger);
-			this._stores.push({
-				store: store,
-				trigger: trigger,
-				stateName: stateName
-			});
-		},
-		connectFilter: function connectFilter(store, stateName, filter) {
-			var self = this;
-			var trigger = function trigger(data) {
-				var stateData = {};
-				stateData[stateName] = filter(data);
-				self.setState(stateData);
-			};
-			store.on(trigger);
-			this._stores.push({
-				store: store,
-				trigger: trigger,
-				stateName: stateName,
-				filter: filter
-			});
-		},
-		shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-			return !shallowEqualImmutable(this.props, nextProps) || !shallowEqualImmutable(this.state, nextState);
-		},
-		componentWillUnmount: function componentWillUnmount() {
-			var _iteratorNormalCompletion2 = true;
-			var _didIteratorError2 = false;
-			var _iteratorError2 = undefined;
-
-			try {
-				for (var _iterator2 = this._stores[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-					var singleStore = _step2.value;
-
-					singleStore.store.off(singleStore.trigger);
-				}
-			} catch (err) {
-				_didIteratorError2 = true;
-				_iteratorError2 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-						_iterator2['return']();
-					}
-				} finally {
-					if (_didIteratorError2) {
-						throw _iteratorError2;
 					}
 				}
 			}
@@ -193,67 +156,44 @@ return /******/ (function(modules) { // webpackBootstrap
 			this._listeners['delete'](listener);
 		};
 		proto.trigger = function () {
-			var data = this.get();
+			var data = this.getData();
 			if (ImmutableIs(data, this._data)) return;
 			this._data = data;
-			var _iteratorNormalCompletion3 = true;
-			var _didIteratorError3 = false;
-			var _iteratorError3 = undefined;
+			var _iteratorNormalCompletion2 = true;
+			var _didIteratorError2 = false;
+			var _iteratorError2 = undefined;
 
 			try {
-				var _loop = function () {
-					var listener = _step3.value;
+				for (var _iterator2 = this._listeners[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+					var listener = _step2.value;
 
-					setTimeout(function () {
-						return listener(data);
-					}, 0);
-				};
-
-				for (var _iterator3 = this._listeners[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-					_loop();
+					setTimeout(listener, 0);
 				}
 			} catch (err) {
-				_didIteratorError3 = true;
-				_iteratorError3 = err;
+				_didIteratorError2 = true;
+				_iteratorError2 = err;
 			} finally {
 				try {
-					if (!_iteratorNormalCompletion3 && _iterator3['return']) {
-						_iterator3['return']();
+					if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+						_iterator2['return']();
 					}
 				} finally {
-					if (_didIteratorError3) {
-						throw _iteratorError3;
+					if (_didIteratorError2) {
+						throw _iteratorError2;
 					}
 				}
 			}
 		};
-		proto.connect = function (store, stateName) {
-			var _this = this;
-
-			var trigger = function trigger(data) {
-				_this[stateName] = data;
-				_this.trigger();
-			};
-			store.on(trigger);
-			this[stateName] = store.get();
+		proto.listen = function (store) {
+			store.on(this.trigger.bind(this));
 		};
-		proto.connectFilter = function (store, stateName, filter) {
-			var _this2 = this;
-
-			var trigger = function trigger(data) {
-				_this2[stateName] = filter(data);
-				_this2.trigger();
-			};
-			store.on(trigger);
-			this[stateName] = filter(store.get());
-		};
-		proto._get = function () {
+		proto._getData = function () {
 			return this._data;
 		};
 		function StoreClass() {
 			this._listeners = new Set();
 			if (this.initialize) this.initialize();
-			this._data = this.get();
+			this._data = this.getData();
 		}
 		StoreClass.prototype = proto;
 		var store = new StoreClass();
@@ -261,7 +201,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var storeAction = {};
 		storeAction.on = store.on.bind(store);
 		storeAction.off = store.off.bind(store);
-		storeAction.get = store._get.bind(store);
+		storeAction.getData = store._getData.bind(store);
 		for (var methodName in store) {
 			var methodResult = store[methodName];
 			if (typeof methodResult != 'function') continue;

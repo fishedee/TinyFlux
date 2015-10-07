@@ -4,9 +4,7 @@ import Immutable from 'immutable'
 
 export default TinyFlux.createStore({
 	initialize(){
-		this.connectFilter(GithubListStore,'data',(data)=>{
-			return data.get('stargazer') || Immutable.fromJS({});
-		});
+		this.listen(GithubListStore);
 	},
 	onFetch(name){
 		GithubListStore.fetch('stargazer',name,`/repos/${name}/stargazers`);
@@ -14,7 +12,7 @@ export default TinyFlux.createStore({
 	onFetchNext(name){
 		GithubListStore.fetchNext('stargazer',name);
 	},
-	get(){
-		return this.data;
+	getData(){
+		return GithubListStore.getData().get('stargazer') || Immutable.fromJS({});
 	}
 });

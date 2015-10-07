@@ -4,14 +4,12 @@ import Immutable from 'immutable'
 
 export default TinyFlux.createStore({
 	initialize(){
-		this.connectFilter(GithubSimpleStore,'data',(data)=>{
-			return data.get('user') || Immutable.fromJS({});
-		});
+		this.listen(GithubSimpleStore);
 	},
 	onFetch(name){
 		return GithubSimpleStore.fetch('user',name,`/users/${name}`);
 	},
-	get(){
-		return this.data;
+	getData(){
+		return GithubSimpleStore.getData().get('user') || Immutable.fromJS({});
 	}
 });

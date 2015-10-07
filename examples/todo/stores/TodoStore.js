@@ -50,7 +50,7 @@ export default TinyFlux.createStore({
 		)
 		this.trigger();
 	},
-	get(){
+	getData(){
 		return this.todos;
 	}
 });

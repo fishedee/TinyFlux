@@ -9,16 +9,16 @@ import List from '../components/List';
 let UserPage = React.createClass({
   mixins:[TinyFlux.ComponentMixin],
   initialize() {
-    this.connectFilter(UserStore,'user',(data)=>{
-      const { name } = this.props;
-      return data.get(name) || null;
-    });
-    this.connectFilter(StarStore,'star',(data)=>{
-      const { name } = this.props;
-      return data.get(name) || null;
-    });
+    this.listen(UserStore);
+    this.listen(StarStore);
   },
-
+  getData(){
+      const { name } = this.props;
+      return {
+        user:UserStore.getData().get(name) || null,
+        star:StarStore.getData().get(name) || null,
+      };
+  },
   componentDidMount() {
     const { name } = this.props;
     UserStore.fetch(name);
@@ -43,7 +43,7 @@ let UserPage = React.createClass({
     if (!user || !star || user.get('isFetching') ){
       return <h1><i>Loading {name}’s profile...</i></h1>;
     }
-
+    
     return (
       <div>
         <User user={user.get('data')} />

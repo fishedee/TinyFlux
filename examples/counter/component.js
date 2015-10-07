@@ -5,7 +5,12 @@ import Store from "./store"
 export default React.createClass({
 	mixins:[TinyFlux.ComponentMixin],
 	initialize(){
-		this.connect(Store,'counter');
+		this.listen(Store);
+	},
+	getData(){
+		return {
+			counter:Store.getData()
+		};
 	},
 	render(){
 		return (

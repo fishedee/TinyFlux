@@ -52,7 +52,7 @@ export default TinyFlux.createStore({
 			return Promise.resolve();
 		}
 	},
-	get(){
+	getData(){
 		return this.data;
 	}
 });

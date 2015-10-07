@@ -56,7 +56,7 @@ ONLY 1 MINUTE , YOU KNOW EVERYTHING ABOUT TINYFLUX
 import TinyFlux from 'tinyflux';
 
 //1.create Store by TinyFlux.createStore
-//2.set your get function
+//2.set your getData function
 //3.set your action function (must be start with on) and call trigger when data change
 //ok that's all
 export default TinyFlux.createStore({
@@ -71,7 +71,7 @@ export default TinyFlux.createStore({
 		this.counter--;
 		this.trigger();
 	},
-	get(){
+	getData(){
 		return this.counter;
 	}
 });
@@ -84,13 +84,19 @@ import React from "react"
 import Store from "./store"
 
 //1.create Component by TinyFlux.createComponent
-//2.connect your store to your component
-//3.set action when event trigger
+//2.set your component listen to store
+//3.set data how to get from store
+//4.set action when event trigger
 //ok that's all
 export default React.createClass({
 	mixins:[TinyFlux.ComponentMixin],
 	initialize(){
-		this.connect(store,'counter');
+		this.listen(Store);
+	},
+	getData(){
+		return {
+			counter:Store.getData()
+		};
 	},
 	render(){
 		return (

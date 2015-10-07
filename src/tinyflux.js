@@ -32,56 +32,34 @@ function shallowEqualImmutable(objA, objB) {
 
 let ComponentMixin = {
 	getInitialState(){
-		this._stores = [];
+		this._stores = new Map();
 		if( this.initialize )
 			this.initialize();
-		var data = {};
-		for( let singleStore of this._stores ){
-			let stateName = singleStore.stateName;
-			let storeData = singleStore.store.get();
-			if( singleStore.filter )
-				storeData = singleStore.filter( storeData );
-			data[stateName] = storeData;
-		}
+		let data = {};
+		if( this.getData )
+			data = this.getData();
 		return data;
 	},
-	connect(store,stateName){
-		let self = this;
-		let trigger = function(data){
-			let stateData = {};
-			stateData[stateName] = data;
-			self.setState(stateData);
+	listen(store){
+		if( this._stores.has(store) )
+			return;
+
+		let trigger = ()=>{
+			if( this.getData ){
+				let data = this.getData();
+				this.setState(data);
+			}
 		};
 		store.on(trigger);
-		this._stores.push({
-			store:store,
-			trigger:trigger,
-			stateName:stateName
-		});
-		
-	},
-	connectFilter(store,stateName,filter){
-		let self = this;
-		let trigger = function(data){
-			let stateData = {};
-			stateData[stateName] = filter(data);
-			self.setState(stateData);
-		};
-		store.on(trigger);
-		this._stores.push({
-			store:store,
-			trigger:trigger,
-			stateName:stateName,
-			filter:filter
-		});
+		this._stores.set(store,trigger);
 	},
 	shouldComponentUpdate(nextProps, nextState) {
 		return !shallowEqualImmutable(this.props, nextProps) ||
 			!shallowEqualImmutable(this.state, nextState);
 	},
 	componentWillUnmount(){
-		for( let singleStore of this._stores ){
-			singleStore.store.off(singleStore.trigger);
+		for( let [singleStore,singleTrigger] of this._stores ){
+			singleStore.off(singleTrigger);
 		}
 		this._stores = null;
 	}
@@ -96,38 +74,25 @@ function createStore(proto){
 		this._listeners.delete(listener);
 	}
 	proto.trigger = function(){
-		let data = this.get();
+		let data = this.getData();
 		if( ImmutableIs(data,this._data) )
 			return;
 		this._data = data;
 		for( let listener of this._listeners ){
-			setTimeout(()=>listener(data),0);
+			setTimeout(listener,0);
 		}
 	}
-	proto.connect = function(store,stateName){
-		let trigger = (data)=>{
-			this[stateName] = data;
-			this.trigger();
-		};
-		store.on(trigger);
-		this[stateName] = store.get();
+	proto.listen = function(store){
+		store.on(this.trigger.bind(this));
 	}
-	proto.connectFilter = function(store,stateName,filter){
-		let trigger = (data)=>{
-			this[stateName] = filter(data);
-			this.trigger();
-		};
-		store.on(trigger);
-		this[stateName] = filter(store.get());
-	}
-	proto._get = function(){
+	proto._getData = function(){
 		return this._data;
 	}
 	function StoreClass(){
 		this._listeners = new Set();
 		if( this.initialize )
 			this.initialize();
-		this._data = this.get();
+		this._data = this.getData();
 	}
 	StoreClass.prototype = proto;
 	let store = new StoreClass();
@@ -135,7 +100,7 @@ function createStore(proto){
 	let storeAction = {};
 	storeAction.on = store.on.bind(store);
 	storeAction.off = store.off.bind(store);
-	storeAction.get = store._get.bind(store);
+	storeAction.getData = store._getData.bind(store);
 	for( let methodName in store ){
 		let methodResult = store[methodName];
 		if( typeof methodResult != 'function' )

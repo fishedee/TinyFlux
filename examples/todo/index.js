@@ -8,7 +8,12 @@ import 'todomvc-app-css/index.css';
 let App = React.createClass({
   mixins:[TinyFlux.ComponentMixin],
   initialize(){
-  	this.connect(TodoStore,'todos');
+  	this.listen(TodoStore);
+  },
+  getData(){
+    return {
+      todos:TodoStore.getData()
+    }
   },
   render() {
     return (

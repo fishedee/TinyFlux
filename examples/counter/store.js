@@ -12,7 +12,7 @@ export default TinyFlux.createStore({
 		this.counter--;
 		this.trigger();
 	},
-	get(){
+	getData(){
 		return this.counter;
 	}
 });

@@ -9,16 +9,16 @@ import List from '../components/List';
 let RepoPage = React.createClass({
   mixins:[TinyFlux.ComponentMixin],
   initialize(){
-    this.connectFilter(StargazerStore,'stargazer',(data)=>{
-      const { fullName } = this.props;
-      return data.get(fullName) || null;
-    });
-    this.connectFilter(RepoStore,'repo',(data)=>{
-      const { fullName } = this.props;
-      return data.get(fullName) || null;
-    });
+    this.listen(StargazerStore);
+    this.listen(RepoStore);
   },
-
+  getData(){
+    const { fullName } = this.props;
+    return {
+      stargazer:StargazerStore.getData().get(fullName) || null,
+      repo:RepoStore.getData().get(fullName) || null,
+    };
+  },
   componentDidMount() {
     const { fullName } = this.props;
     RepoStore.fetch(fullName);

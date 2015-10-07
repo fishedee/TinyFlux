@@ -8,16 +8,17 @@ import Immutable from 'immutable';
 var Items = React.createClass({
   mixins:[TinyFlux.ComponentMixin],
   initialize() {
-    this.connectFilter(
-      RedditStore,
-      'post',
-      (data)=>data.get(this.props.selectedReddit) 
-        || Immutable.fromJS({
+    this.listen(RedditStore);
+  },
+  getData(){
+    let redditStoreData = RedditStore.getData();
+    return {
+      post:redditStoreData.get(this.props.selectedReddit) || Immutable.fromJS({
           isFetching:true,
           didInvalidate:false,
           items:[]
         })
-    );
+    }
   },
   componentDidMount() {
     const { selectedReddit } = this.props;
