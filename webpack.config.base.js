@@ -9,13 +9,15 @@ module.exports = {
     ]
   },
   output: {
-    library: 'TinyFlux',
+    //library: 'TinyFlux',
     libraryTarget: 'umd'
   },
   resolve: {
     extensions: ['', '.js'],
   },
   externals: {
+    "react":'React',
+    "react-native":'React',
     "immutable":'Immutable'
   }
 };

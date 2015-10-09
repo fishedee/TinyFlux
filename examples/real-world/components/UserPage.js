@@ -1,33 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import TinyFlux from 'tinyflux';
 import UserStore from '../stores/UserStore';
+import UserAction from '../actions/UserAction';
 import StarStore from '../stores/StarStore';
+import StarAction from '../actions/StarAction';
 import User from '../components/User';
 import Repo from '../components/Repo';
 import List from '../components/List';
 
 let UserPage = React.createClass({
-  mixins:[TinyFlux.ComponentMixin],
-  initialize() {
-    this.listen(UserStore);
-    this.listen(StarStore);
-  },
-  getData(){
-      const { name } = this.props;
-      return {
-        user:UserStore.getData().get(name) || null,
-        star:StarStore.getData().get(name) || null,
-      };
-  },
   componentDidMount() {
     const { name } = this.props;
-    UserStore.fetch(name);
-    StarStore.fetch(name);
+    UserAction.fetch(name);
+    StarAction.fetch(name);
   },
 
   handleLoadMoreClick() {
     const { name } = this.props;
-    StarStore.fetchNext(name);
+    StarAction.fetchNext(name);
   },
 
   renderRepo(repo) {
@@ -38,12 +28,13 @@ let UserPage = React.createClass({
   },
 
   render() {
-    const { user , star } = this.state;
+    const { user , star } = this.props;
     const { name } = this.props;
     if (!user || !star || user.get('isFetching') ){
       return <h1><i>Loading {name}’s profile...</i></h1>;
     }
-    
+    console.log(user.toJS());
+    console.log(star.toJS());
     return (
       <div>
         <User user={user.get('data')} />
@@ -62,12 +53,20 @@ let UserPage = React.createClass({
   }
 });
 
-export default React.createClass({
-  mixins:[TinyFlux.ComponentMixin],
+let UserPageConnect = TinyFlux.connect(function(){
+   const { name } = this.props;
+    return {
+      name:name,
+      user:UserStore.getState().get(name) || null,
+      star:StarStore.getState().get(name) || null,
+    };
+},UserPage);
+
+export default TinyFlux.createComponent({
   render:function(){
     const { login } = this.props.params;
     return (
-      <UserPage key={login} name={login} />
+      <UserPageConnect key={login} name={login} />
     );
   }
 });

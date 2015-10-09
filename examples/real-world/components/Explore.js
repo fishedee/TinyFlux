@@ -3,8 +3,7 @@ import TinyFlux from 'tinyflux';
 
 const GITHUB_REPO = 'https://github.com/rackt/redux';
 
-export default React.createClass({
-  mixins:[TinyFlux.ComponentMixin],
+export default TinyFlux.createComponent({
   componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.props.value) {
       this.setInputValue(nextProps.value);

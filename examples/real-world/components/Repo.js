@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import TinyFlux from 'tinyflux';
 
-export default React.createClass({
-  mixins:[TinyFlux.ComponentMixin],
+export default TinyFlux.createComponent({
   render() {
     const { repo } = this.props;
     let owner = repo.get('owner');

@@ -1,13 +1,13 @@
 {
   "name": "tinyflux",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "tinyflux is a flux like expect very tiny framekwork",
-  "main": "lib/tinyflux.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "npm run build:lib && npm run build:umd && npm run build:umd:min",
     "build:lib": "babel src --out-dir lib",
-    "build:umd": "webpack src/tinyflux.js dist/tinyflux.js --config webpack.config.development.js",
-    "build:umd:min": "webpack src/tinyflux.js dist/tinyflux.min.js --config webpack.config.production.js"
+    "build:umd": "webpack src/index.js dist/index.js --config webpack.config.development.js;webpack src/native.js dist/native.js --config webpack.config.development.js",
+    "build:umd:min": "webpack src/index.js dist/index.min.js --config webpack.config.production.js;webpack src/native.js dist/native.min.js --config webpack.config.development.js"
   },
   "repository": {
     "type": "git",

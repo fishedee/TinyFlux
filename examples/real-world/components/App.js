@@ -3,8 +3,8 @@ import TinyFlux from 'tinyflux';
 import Explore from '../components/Explore';
 import { History } from 'react-router'
 
-export default React.createClass({
-  mixins: [ History ,TinyFlux.ComponentMixin ],
+export default TinyFlux.createComponent({
+  mixins: [ History ],
   handleChange(nextValue) {
     this.history.pushState(null, `/${nextValue}`);
   },

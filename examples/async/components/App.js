@@ -3,37 +3,24 @@ import TinyFlux from 'tinyflux';
 import Picker from './Picker';
 import Posts from './Post';
 import RedditStore from '../stores/RedditStore';
+import RedditAction from '../actions/RedditAction';
 import Immutable from 'immutable';
 
-var Items = React.createClass({
-  mixins:[TinyFlux.ComponentMixin],
-  initialize() {
-    this.listen(RedditStore);
-  },
-  getData(){
-    let redditStoreData = RedditStore.getData();
-    return {
-      post:redditStoreData.get(this.props.selectedReddit) || Immutable.fromJS({
-          isFetching:true,
-          didInvalidate:false,
-          items:[]
-        })
-    }
-  },
+let Items = TinyFlux.createComponent({
   componentDidMount() {
     const { selectedReddit } = this.props;
-    RedditStore.fetchPostsIfNeeded(selectedReddit);
+    RedditAction.fetchPostsIfNeeded(selectedReddit);
   },
   handleRefreshClick(e) {
     e.preventDefault();
     const { selectedReddit } = this.props;
-    RedditStore.invalidateReddit(selectedReddit);
-    RedditStore.fetchPostsIfNeeded(selectedReddit);
+    RedditAction.invalidateReddit(selectedReddit);
+    RedditAction.fetchPostsIfNeeded(selectedReddit);
   },
   render(){
-    const items = this.state.post.get('items');
-    const isFetching = this.state.post.get('isFetching');
-    const lastUpdated = this.state.post.get('lastUpdated');
+    const items = this.props.post.get('items');
+    const isFetching = this.props.post.get('isFetching');
+    const lastUpdated = this.props.post.get('lastUpdated');
     return (
       <div>
          <p>
@@ -66,8 +53,22 @@ var Items = React.createClass({
   }
 });
 
-export default React.createClass({
-  mixins:[TinyFlux.ComponentMixin],
+function mapStateToProps(){
+  let redditStoreData = RedditStore.getState();
+  return {
+    post:redditStoreData.get(this.props.selectedReddit) || Immutable.fromJS({
+        isFetching:true,
+        didInvalidate:false,
+        items:[]
+      }),
+    selectedReddit:this.props.selectedReddit
+  }
+}
+
+let ConnectItems = TinyFlux.connect(mapStateToProps,Items);
+
+
+export default TinyFlux.createComponent({
   getInitialState(){
     return {
       selectedReddit:'reactjs'
@@ -86,7 +87,7 @@ export default React.createClass({
         <Picker value={selectedReddit}
                 onChange={this.handleChange}
                 options={['reactjs', 'frontend']} />
-        <Items key={selectedReddit} selectedReddit={selectedReddit}/>
+        <ConnectItems key={selectedReddit} selectedReddit={selectedReddit}/>
       </div>
     );
   }

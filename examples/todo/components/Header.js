@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react';
 import TinyFlux from 'tinyflux';
 import TodoTextInput from './TodoTextInput';
 
-let Header = React.createClass({
-  mixins:[TinyFlux.ComponentMixin],
+let Header = TinyFlux.createComponent({
   handleSave(text) {
     if (text.length !== 0) {
       this.props.addTodo(text);

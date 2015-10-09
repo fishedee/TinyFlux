@@ -27,7 +27,7 @@ module.exports = {
 
 // When inside Redux repo, prefer src to compiled version.
 // You can safely delete these lines in your project.
-var tinyfluxSrc = __dirname+'/../../src/tinyflux.js';
+var tinyfluxSrc = __dirname+'/../../src/index.js';
 var immutableSrc = __dirname+'/node_modules/immutable/';
 var reactSrc = __dirname+'/node_modules/react/';
 var fs = require('fs');

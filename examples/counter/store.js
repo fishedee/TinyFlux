@@ -1,18 +1,13 @@
 import TinyFlux from "tinyflux"
 
 export default TinyFlux.createStore({
-	initialize(){
-		this.counter = 0;
+	getInitialState(){
+		return 0;
 	},
-	onIncrement(){
-		this.counter++;
-		this.trigger();
+	increment(){
+		this.state += 1;
 	},
-	onDecrement(){
-		this.counter--;
-		this.trigger();
-	},
-	getData(){
-		return this.counter;
+	decrement(){
+		this.state -= 1;
 	}
 });
