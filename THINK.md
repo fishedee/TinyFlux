@@ -34,4 +34,9 @@ action与store分开是很用必要的！！！
 这样就没有关于listen的某个store代码，
 每次都是listen整个store
 
-
+#0.5.1
+0.5.0的开发让代码比以前更易懂
+但是代码量大增
+而且store的代码与action的代码是一一对应的，很是不爽
+下一步的考虑是切离出store，用reducers来生成store。
+从而减少代码
