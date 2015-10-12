@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import TinyFlux from 'tinyflux';
 
-export default TinyFlux.createComponent({
+export default class Repo extends TinyFlux.Component{
   render() {
     const { repo } = this.props;
     let owner = repo.get('owner');
@@ -27,4 +27,4 @@ export default TinyFlux.createComponent({
       </div>
     );
   }
-});
+};

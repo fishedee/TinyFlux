@@ -3,11 +3,10 @@ import TinyFlux from 'tinyflux';
 import Explore from '../components/Explore';
 import { History } from 'react-router'
 
-export default TinyFlux.createComponent({
-  mixins: [ History ],
+export default class App extends TinyFlux.Component{
   handleChange(nextValue) {
-    this.history.pushState(null, `/${nextValue}`);
-  },
+    this.props.history.pushState(null, `/${nextValue}`);
+  }
 
   render() {
     // Injected by React Router
@@ -24,4 +23,4 @@ export default TinyFlux.createComponent({
       </div>
     );
   }
-});
+};

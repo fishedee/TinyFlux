@@ -1,31 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 import TinyFlux from 'tinyflux';
-import UserStore from '../stores/UserStore';
-import UserAction from '../actions/UserAction';
-import StarStore from '../stores/StarStore';
-import StarAction from '../actions/StarAction';
+import {UserStore,StarStore} from '../stores/stores';
 import User from '../components/User';
 import Repo from '../components/Repo';
 import List from '../components/List';
 
-let UserPage = React.createClass({
+class UserPageInner extends TinyFlux.Component{
   componentDidMount() {
     const { name } = this.props;
-    UserAction.fetch(name);
-    StarAction.fetch(name);
-  },
+    UserStore.fetch(name);
+    StarStore.fetch(name);
+  }
 
   handleLoadMoreClick() {
     const { name } = this.props;
-    StarAction.fetchNext(name);
-  },
+    StarStore.fetchNext(name);
+  }
 
   renderRepo(repo) {
     return (
       <Repo repo={repo}
             key={repo.get('fullName')} />
     );
-  },
+  }
 
   render() {
     const { user , star } = this.props;
@@ -51,7 +48,7 @@ let UserPage = React.createClass({
       </div>
     );
   }
-});
+};
 
 let UserPageConnect = TinyFlux.connect(function(){
    const { name } = this.props;
@@ -60,13 +57,13 @@ let UserPageConnect = TinyFlux.connect(function(){
       user:UserStore.getState().get(name) || null,
       star:StarStore.getState().get(name) || null,
     };
-},UserPage);
+},UserPageInner);
 
-export default TinyFlux.createComponent({
+export default class UserPage extends TinyFlux.Component{
   render:function(){
     const { login } = this.props.params;
     return (
       <UserPageConnect key={login} name={login} />
     );
   }
-});
+};

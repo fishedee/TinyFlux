@@ -1,31 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 import TinyFlux from 'tinyflux';
-import StargazerStore from '../stores/StargazerStore';
-import StargazerAction from '../actions/StargazerAction';
-import RepoStore from '../stores/RepoStore';
-import RepoAction from '../actions/RepoAction';
+import {StargazerStore,RepoStore} from '../stores/Store';
 import Repo from '../components/Repo';
 import User from '../components/User';
 import List from '../components/List';
 
-let RepoPage = TinyFlux.createComponent({
+class RepoPageInner extends TinyFlux.Component{
   componentDidMount() {
     const { fullName } = this.props;
-    RepoAction.fetch(fullName);
-    StargazerAction.fetch(fullName);
-  },
+    RepoStore.fetch(fullName);
+    StargazerStore.fetch(fullName);
+  }
 
   handleLoadMoreClick() {
     const { fullName} = this.props;
-    StargazerAction.fetchNext(fullName);
-  },
+    StargazerStore.fetchNext(fullName);
+  }
 
   renderUser(user) {
     return (
       <User user={user}
             key={user.get('login')} />
     );
-  },
+  }
 
   render() {
     const { repo, stargazer } = this.props;
@@ -49,7 +46,7 @@ let RepoPage = TinyFlux.createComponent({
       </div>
     );
   }
-});
+};
 
 let RepoPageConnect = TinyFlux.connect(function(){
    const { fullName,name } = this.props;
@@ -59,9 +56,9 @@ let RepoPageConnect = TinyFlux.connect(function(){
       stargazer:StargazerStore.getState().get(fullName) || null,
       repo:RepoStore.getState().get(fullName) || null,
     };
-},RepoPage);
+},RepoPageInner);
 
-export default TinyFlux.createComponent({
+export default class RepoPage extends TinyFlux.Component{
   render:function(){
     const { login, name } = this.props.params;
     let fullName = login+"/"+name;
@@ -69,4 +66,4 @@ export default TinyFlux.createComponent({
       <RepoPageConnect key={fullName} fullName={fullName} name={name} />
     );
   }
-});
+};

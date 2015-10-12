@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import TinyFlux from 'tinyflux';
 
-export default TinyFlux.createComponent({
+export default class List extends TinyFlux.Component{
   renderLoadMore() {
     const { isFetching, onLoadMoreClick } = this.props;
     return (
@@ -11,7 +11,7 @@ export default TinyFlux.createComponent({
         {isFetching ? 'Loading...' : 'Load More'}
       </button>
     );
-  },
+  }
 
   render() {
     const {
@@ -36,4 +36,4 @@ export default TinyFlux.createComponent({
       </div>
     );
   }
-});
+};
