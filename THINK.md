@@ -40,3 +40,18 @@ action与store分开是很用必要的！！！
 而且store的代码与action的代码是一一对应的，很是不爽
 下一步的考虑是切离出store，用reducers来生成store。
 从而减少代码
+
+#0.5.2
+action与store分开代码冗余似乎解决不了，如果用reducer方案感觉又太复杂了
+再次将action与store合并
+将以前的trigger去掉，改用object __setSetter__来监听state是否有变化
+然后将原来的createStore改为createClass，避免难看的复用代码的问题
+复用代码有三个案例
+1.复用分页代码
+2.列表复用列表元素代码，构成组合
+3.组合单个元素以及另外一个store，来构成代码。
+有三种store与action组合的方法
+1.用createClass，复用性最差
+2.用class，同时复用数据与接口
+3.用reducer，只复用数据，不复用代码
+最后选择第二种
