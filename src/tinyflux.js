@@ -28,90 +28,61 @@ module.exports = function(React,Immutable){
 
 		return true;
 	}
-
-	let ComponentMixin = {
+	
+	class Component extends React.Component{
 		shouldComponentUpdate(nextProps, nextState) {
 			return !shallowEqualImmutable(this.props, nextProps) ||
 				!shallowEqualImmutable(this.state, nextState);
 		}
-	};
-	let storelisteners = new Set();
-	function createComponent(proto){
-		if( !proto.mixins )
-			proto.mixins = [ComponentMixin];
-		return React.createClass(proto);
 	}
-	function createStore(proto){
-		//init store
-		function StoreClass(){
-			this.state = null;
+
+	let allStoreListener = new Set();
+	let hasTrigger = false;
+	class Store{
+		constructor(){
+			this.__defineSetter__('state',(state)=>{
+				this._state = state;
+				if( allStoreListener.size == 0 )
+					return;
+				if( hasTrigger == true )
+					return;
+				hasTrigger = true;
+				setTimeout(()=>{
+					hasTrigger = false;
+					for( let singleListener of allStoreListener ){
+						singleListener();
+					}
+				},0);
+			});
+			this.__defineGetter__('state',()=>{
+				return this._state;
+			});
 		}
-		StoreClass.prototype = proto;
-		let store = new StoreClass();
-		//init store action
-		let storeAction = {};
-		store.state = store.getInitialState();
-		for( let methodName in store ){
-			let methodResult = store[methodName];
-			if( typeof methodResult != 'function' )
-				continue;
-			storeAction[methodName] = function(){
-				let oldState = this.state;
-				let result = methodResult.apply(store,arguments);
-				if( ImmutableIs(oldState,store.state) )
-					return result;
-				for( let listener of storelisteners ){
-					listener();
-				}
-				return result;
-			}
-		}
-		storeAction.getState = ()=>{
-			return store.state;
-		}
-		return storeAction;
 	}
-	function createAction(proto){
-		//init action
-		function ActionClass(){
-		}
-		ActionClass.prototype = proto;
-		let action = new ActionClass();
-		//init action action
-		let actionAction = {};
-		for( let methodName in action ){
-			let methodResult = action[methodName];
-			if( typeof methodResult != 'function' )
-				continue;
-			actionAction[methodName] = methodResult.bind(action);
-		}
-		return actionAction;
-	}
-	function connect(connectFilter,Component){
-		return createComponent({
-			getInitialState:function(){
-				this._storeConnectFilter = connectFilter.bind(this);
+	function connect(connectFilter,ConnectComponent){
+		return class TinyFluxConnect extends Component{
+			constructor(props){
+				super(props);
 				this._storelistener = ()=>{
-					this.setState(this._storeConnectFilter());
+					this.setState(connectFilter(this.props));
 				};
-				storelisteners.add(this._storelistener);
-				return this._storeConnectFilter();
-			},
-			componentWillReceiveProps:function(){
-				this._storelistener();
-			},
-			componentWillUnmount:function(){
-				storelisteners.delete(this._storelistener);
-			},
-			render:function(){
-				return (<Component {...this.state}/>);
+				allStoreListener.add(this._storelistener);
+				this.state = connectFilter(props);
 			}
-		});
+			componentWillReceiveProps(nextProps){
+				this._storelistener(nextProps);
+			}
+			componentWillUnmount(){
+				allStoreListener.delete(this._storelistener);
+			}
+			render(){
+				return (<ConnectComponent {...this.state}/>);
+			}
+		};
 	}
 	return {
-		createAction:createAction,
-		createStore:createStore,
-		createComponent:createComponent,
+		Component:Component,
+		Store:Store,
 		connect:connect
 	};
 }

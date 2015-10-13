@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import TinyFlux from 'tinyflux';
 
 export default class List extends TinyFlux.Component{
+  constructor(){
+    super();
+  }
   renderLoadMore() {
     const { isFetching, onLoadMoreClick } = this.props;
     return (

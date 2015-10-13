@@ -4,6 +4,11 @@ import TinyFlux from 'tinyflux';
 const GITHUB_REPO = 'https://github.com/rackt/redux';
 
 export default class Explore extends TinyFlux.Component{
+  constructor(){
+    super();
+    this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleGoClick = this.handleGoClick.bind(this);
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.props.value) {
       this.setInputValue(nextProps.value);

@@ -1,11 +1,15 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import TinyFlux from 'tinyflux';
 import Explore from '../components/Explore';
-import { History } from 'react-router'
+import { PropTypes } from 'react-router'
 
-export default class App extends TinyFlux.Component{
+ class App extends TinyFlux.Component{
+  constructor(){
+    super();
+    this.handleChange = this.handleChange.bind(this);
+  }
   handleChange(nextValue) {
-    this.props.history.pushState(null, `/${nextValue}`);
+    this.context.history.pushState(null, `/${nextValue}`);
   }
 
   render() {
@@ -24,3 +28,7 @@ export default class App extends TinyFlux.Component{
     );
   }
 };
+
+App.contextTypes = { history: PropTypes.history }
+
+export default App;

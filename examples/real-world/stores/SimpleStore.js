@@ -1,8 +1,10 @@
 import Immutable from 'immutable';
 import TinyFlux from 'tinyflux';
+import 'isomorphic-fetch';
 
 export default class SimpleStore extends TinyFlux.Store{
-	constrctor(){
+	constructor(){
+		super();
 		this.state = Immutable.fromJS({});
 	}
 	requestBegin(name){
@@ -29,9 +31,12 @@ export default class SimpleStore extends TinyFlux.Store{
 			return singleData;
 		});
 	}
+	get(name){
+		return this.state.get(name);
+	}
 	async _fetch(name){
-		let url = this._getUrl(name);
-		let response = fetch(url);
+		let url = await this._getUrl(name);
+		let response = await fetch('https://api.github.com'+url);
 		let json = await response.json();
 		if( response.ok )
 			return {
@@ -39,7 +44,7 @@ export default class SimpleStore extends TinyFlux.Store{
 			};
 		else
 			return {
-				error:json.message || '网络错误';
+				error:json.message || '网络错误'
 			};
 	}
 	async fetch(name){

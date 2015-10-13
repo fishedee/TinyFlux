@@ -1,9 +1,9 @@
-import RepoStore extends 'RepoStore';
-import UserStore extends 'UserStore';
-import StarStore extends 'StarStore';
-import StargazerStore extends 'StargazerStore';
+import RepoStore from './RepoStore';
+import UserStore from './UserStore';
+import StarStore from './StarStore';
+import StargazerStore from './StargazerStore';
 
-export {
+export default {
 	RepoStore:new RepoStore(),
 	UserStore:new UserStore(),
 	StarStore:new StarStore(),

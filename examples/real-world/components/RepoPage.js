@@ -6,6 +6,10 @@ import User from '../components/User';
 import List from '../components/List';
 
 class RepoPageInner extends TinyFlux.Component{
+  constructor(){
+    super();
+    this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
+  }
   componentDidMount() {
     const { fullName } = this.props;
     RepoStore.fetch(fullName);
@@ -48,18 +52,18 @@ class RepoPageInner extends TinyFlux.Component{
   }
 };
 
-let RepoPageConnect = TinyFlux.connect(function(){
-   const { fullName,name } = this.props;
+let RepoPageConnect = TinyFlux.connect(function(props){
+   const { fullName,name } = props;
     return {
       name:name,
       fullName:fullName,
-      stargazer:StargazerStore.getState().get(fullName) || null,
-      repo:RepoStore.getState().get(fullName) || null,
+      stargazer:StargazerStore.get(fullName),
+      repo:RepoStore.get(fullName),
     };
 },RepoPageInner);
 
 export default class RepoPage extends TinyFlux.Component{
-  render:function(){
+  render(){
     const { login, name } = this.props.params;
     let fullName = login+"/"+name;
     return (

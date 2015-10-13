@@ -4,6 +4,7 @@ import 'isomorphic-fetch';
 
 export default class SimpleListStore extends TinyFlux.Store{
 	constructor(){
+		super();
 		this.state = Immutable.fromJS({});
 	}
 	_requestBegin(name){
@@ -56,10 +57,12 @@ export default class SimpleListStore extends TinyFlux.Store{
 		}
 		return nextLink.split(';')[0].slice(1, -1);
 	}
-	_fetch(name,url){
-		if( !url )
-			url = await this._getUrl(name);
-		let response = await fetch('https://api.github.com'+url);
+	async _fetch(name,url){
+		if( !url ){
+			url = 'https://api.github.com' + await this._getUrl(name);
+		}
+		
+		let response = await fetch(url);
 		let json = await response.json();
 		if( response.ok )
 			return {
@@ -71,6 +74,9 @@ export default class SimpleListStore extends TinyFlux.Store{
 				error:json.message || '网络错误'
 			}
 		return 
+	}
+	get(name){
+		return this.state.get(name);
 	}
 	async fetch(name){
 		if( this.state.has(name) )
