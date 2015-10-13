@@ -86,3 +86,8 @@ action与store分开代码冗余似乎解决不了，如果用reducer方案感�
 3.用reducer，只复用数据，不复用代码
 
 最后选择第二种
+
+#0.5.3
+Store作为Class，复用能力比较强
+Component作为Class，代码很难受，没有mixin，而且所有触发都没有绑定this
+没办法了，用回createClass的办法，使用类似Component的mixin来复用代码
