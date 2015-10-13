@@ -2,11 +2,10 @@ import Immutable from 'immutable';
 import TinyFlux from 'tinyflux';
 import 'isomorphic-fetch';
 
-export default class SimpleListStore extends TinyFlux.Store{
-	constructor(){
-		super();
-		this.state = Immutable.fromJS({});
-	}
+export default {
+	getInitialState(){
+		return Immutable.fromJS({});
+	},
 	_requestBegin(name){
 		let data = this.state;
 		if( !data.has(name) ){
@@ -22,7 +21,7 @@ export default class SimpleListStore extends TinyFlux.Store{
 				return singleData.set('isFetching',true);
 			});
 		}
-	}
+	},
 	_requestSuccess(name,data,nextPageUrl){
 		console.log(this.state.toJS());
 		this.state = this.state.update(name,(singleData)=>{
@@ -37,7 +36,7 @@ export default class SimpleListStore extends TinyFlux.Store{
 			singleData = singleData.set('nextPageUrl',nextPageUrl);
 			return singleData;
 		});
-	}
+	},
 	_requestFail(name,message){
 		console.log(this.state.toJS());
 		this.state = this.state.update(name,(singleData)=>{
@@ -45,7 +44,7 @@ export default class SimpleListStore extends TinyFlux.Store{
 			singleData = singleData.set('errorMessage',message);
 			return singleData;
 		});
-	}
+	},
 	_getNextPageUrl(response) {
 		const link = response.headers.get('link');
 		if (!link) {
@@ -56,7 +55,7 @@ export default class SimpleListStore extends TinyFlux.Store{
 			return null;
 		}
 		return nextLink.split(';')[0].slice(1, -1);
-	}
+	},
 	async _fetch(name,url){
 		if( !url ){
 			url = 'https://api.github.com' + await this._getUrl(name);
@@ -74,10 +73,10 @@ export default class SimpleListStore extends TinyFlux.Store{
 				error:json.message || '网络错误'
 			}
 		return 
-	}
+	},
 	get(name){
 		return this.state.get(name);
-	}
+	},
 	async fetch(name){
 		if( this.state.has(name) )
 			return Promise.resolve();
@@ -88,7 +87,7 @@ export default class SimpleListStore extends TinyFlux.Store{
 			this._requestSuccess(name,response.data,response.nextPageUrl);
 		else
 			this._requestFail(name,response.error);
-	}
+	},
 	async fetchNext(name){
 		if( !this.state.has(name) )
 			return Promise.resolve();
@@ -105,4 +104,4 @@ export default class SimpleListStore extends TinyFlux.Store{
 		else
 			this._requestFail(name,response.error);
 	}
-};
+}

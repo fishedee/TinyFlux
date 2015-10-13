@@ -1,6 +1,6 @@
-import TinyFlux from "tinyflux"
+import {Store} from "tinyflux"
 
-export default TinyFlux.createStore({
+let CounterStore = Store.createClass({
 	getInitialState(){
 		return 0;
 	},
@@ -9,5 +9,10 @@ export default TinyFlux.createStore({
 	},
 	decrement(){
 		this.state -= 1;
+	},
+	get(){
+		return this.state;
 	}
 });
+
+export default new CounterStore();

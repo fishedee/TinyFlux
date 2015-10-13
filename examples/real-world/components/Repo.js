@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import TinyFlux from 'tinyflux';
+import {Component} from 'tinyflux';
 
-export default class Repo extends TinyFlux.Component{
+export default Component.createClass({
   render() {
     const { repo } = this.props;
     let owner = repo.get('owner');
@@ -27,4 +27,4 @@ export default class Repo extends TinyFlux.Component{
       </div>
     );
   }
-};
+});

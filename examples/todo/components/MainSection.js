@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import TinyFlux from 'tinyflux';
+import {Component} from 'tinyflux';
 import TodoItem from './TodoItem';
 import Footer from './Footer';
 import { SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE } from '../constants/TodoFilters';
@@ -10,7 +10,7 @@ const TODO_FILTERS = {
   [SHOW_COMPLETED]: todo => todo.get('completed')
 };
 
-let MainSection = TinyFlux.createComponent({
+let MainSection = Component.createClass({
   getInitialState() {
     return { 
       filter: SHOW_ALL 

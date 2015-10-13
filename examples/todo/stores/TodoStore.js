@@ -1,7 +1,7 @@
-import TinyFlux from "tinyflux";
+import {Store} from "tinyflux";
 import Immutable from "immutable";
 
-export default TinyFlux.createStore({
+let TodoStore = Store.createClass({
 	getInitialState(){
 		return Immutable.fromJS([]);
 	},
@@ -43,5 +43,10 @@ export default TinyFlux.createStore({
 		this.state = this.state.filter(
 			(todo)=>!todo.get('completed')
 		)
+	},
+	get(){
+		return this.state;
 	}
 });
+
+module.exports = new TodoStore();

@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
-import TinyFlux from 'tinyflux';
+import {Component} from 'tinyflux';
 import classnames from 'classnames';
 
-let TodoTextInput = TinyFlux.createComponent({
+let TodoTextInput = Component.createClass({
   getInitialState() {
     return {
       text: this.props.text || ''

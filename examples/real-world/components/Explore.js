@@ -1,40 +1,35 @@
-import React, { Component, PropTypes, findDOMNode } from 'react';
-import TinyFlux from 'tinyflux';
+import React, {PropTypes, findDOMNode } from 'react';
+import {Component} from 'tinyflux';
 
 const GITHUB_REPO = 'https://github.com/rackt/redux';
 
-export default class Explore extends TinyFlux.Component{
-  constructor(){
-    super();
-    this.handleKeyUp = this.handleKeyUp.bind(this);
-    this.handleGoClick = this.handleGoClick.bind(this);
-  }
+export default Component.createClass({
   componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.props.value) {
       this.setInputValue(nextProps.value);
     }
-  }
+  },
 
   getInputValue() {
     return findDOMNode(this.refs.input).value;
-  }
+  },
 
   setInputValue(val) {
     // Generally mutating DOM is a bad idea in React components,
     // but doing this for a single uncontrolled field is less fuss
     // than making it controlled and maintaining a state for it.
     findDOMNode(this.refs.input).value = val;
-  }
+  },
 
   handleKeyUp(e) {
     if (e.keyCode === 13) {
       this.handleGoClick();
     }
-  }
+  },
 
   handleGoClick() {
     this.props.onChange(this.getInputValue());
-  }
+  },
 
   render() {
     return (
@@ -53,4 +48,4 @@ export default class Explore extends TinyFlux.Component{
       </div>
     );
   }
-};
+});

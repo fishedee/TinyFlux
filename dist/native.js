@@ -68,14 +68,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 	module.exports = function (React, Immutable) {
 		var ImmutableIs = Immutable.is.bind(Immutable);
 
@@ -106,111 +98,133 @@ return /******/ (function(modules) { // webpackBootstrap
 			return true;
 		}
 
-		var Component = (function (_React$Component) {
-			_inherits(Component, _React$Component);
-
-			function Component() {
-				_classCallCheck(this, Component);
-
-				_get(Object.getPrototypeOf(Component.prototype), 'constructor', this).apply(this, arguments);
+		var ImmutableMixin = {
+			shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+				return !shallowEqualImmutable(this.props, nextProps) || !shallowEqualImmutable(this.state, nextState);
 			}
-
-			_createClass(Component, [{
-				key: 'shouldComponentUpdate',
-				value: function shouldComponentUpdate(nextProps, nextState) {
-					return !shallowEqualImmutable(this.props, nextProps) || !shallowEqualImmutable(this.state, nextState);
-				}
-			}]);
-
-			return Component;
-		})(React.Component);
+		};
 
 		var allStoreListener = new Set();
 		var hasTrigger = false;
+		function createComponentClass(proto) {
+			if (!proto.mixins) proto.mixins = [];
+			proto.mixins.push(ImmutableMixin);
+			return React.createClass(proto);
+		}
+		function createStoreClass(proto) {
+			if (proto.mixins) {
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
 
-		var Store = function Store() {
-			var _this = this;
+				try {
+					for (var _iterator = proto.mixins[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var singleMixin = _step.value;
 
-			_classCallCheck(this, Store);
-
-			this.__defineSetter__('state', function (state) {
-				_this._state = state;
-				if (allStoreListener.size == 0) return;
-				if (hasTrigger == true) return;
-				hasTrigger = true;
-				setTimeout(function () {
-					hasTrigger = false;
-					var _iteratorNormalCompletion = true;
-					var _didIteratorError = false;
-					var _iteratorError = undefined;
-
-					try {
-						for (var _iterator = allStoreListener[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-							var singleListener = _step.value;
-
-							singleListener();
-						}
-					} catch (err) {
-						_didIteratorError = true;
-						_iteratorError = err;
-					} finally {
-						try {
-							if (!_iteratorNormalCompletion && _iterator['return']) {
-								_iterator['return']();
-							}
-						} finally {
-							if (_didIteratorError) {
-								throw _iteratorError;
-							}
+						for (var methodName in singleMixin) {
+							var methodResult = singleMixin[methodName];
+							if (proto.hasOwnProperty(methodName)) continue;
+							proto[methodName] = methodResult;
 						}
 					}
-				}, 0);
-			});
-			this.__defineGetter__('state', function () {
-				return _this._state;
-			});
-		};
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator['return']) {
+							_iterator['return']();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+			}
+			function StoreClass() {
+				var _this = this;
 
+				this._state = this.getInitialState();
+				this.__defineSetter__('state', function (state) {
+					_this._state = state;
+					if (allStoreListener.size == 0) return;
+					if (hasTrigger == true) return;
+					hasTrigger = true;
+					setTimeout(function () {
+						hasTrigger = false;
+						var _iteratorNormalCompletion2 = true;
+						var _didIteratorError2 = false;
+						var _iteratorError2 = undefined;
+
+						try {
+							for (var _iterator2 = allStoreListener[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+								var singleListener = _step2.value;
+
+								singleListener();
+							}
+						} catch (err) {
+							_didIteratorError2 = true;
+							_iteratorError2 = err;
+						} finally {
+							try {
+								if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+									_iterator2['return']();
+								}
+							} finally {
+								if (_didIteratorError2) {
+									throw _iteratorError2;
+								}
+							}
+						}
+					}, 0);
+				});
+				this.__defineGetter__('state', function () {
+					return _this._state;
+				});
+				for (var methodName in this) {
+					var methodResult = this[methodName];
+					if (typeof methodResult != 'function') continue;
+					if (methodName == 'getInitialState') continue;
+					if (methodName.substr(0, 1) == '_') continue;
+					this[methodName] = methodResult.bind(this);
+				}
+			}
+			StoreClass.prototype = proto;
+			return StoreClass;
+		}
 		function connect(connectFilter, ConnectComponent) {
-			return (function (_Component) {
-				_inherits(TinyFluxConnect, _Component);
-
-				function TinyFluxConnect(props) {
+			return createComponentClass({
+				getInitialState: function getInitialState() {
 					var _this2 = this;
 
-					_classCallCheck(this, TinyFluxConnect);
-
-					_get(Object.getPrototypeOf(TinyFluxConnect.prototype), 'constructor', this).call(this, props);
+					this._connectFilter = connectFilter.bind(this);
 					this._storelistener = function () {
-						_this2.setState(connectFilter(_this2.props));
+						_this2.setState(_this2._connectFilter(_this2.props));
 					};
 					allStoreListener.add(this._storelistener);
-					this.state = connectFilter(props);
+					return this._connectFilter(this.props);
+				},
+				componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+					this.setState(this._connectFilter(nextProps));
+				},
+				componentWillUnmount: function componentWillUnmount() {
+					allStoreListener['delete'](this._storelistener);
+				},
+				render: function render() {
+					return React.createElement(ConnectComponent, this.state);
 				}
-
-				_createClass(TinyFluxConnect, [{
-					key: 'componentWillReceiveProps',
-					value: function componentWillReceiveProps(nextProps) {
-						this._storelistener(nextProps);
-					}
-				}, {
-					key: 'componentWillUnmount',
-					value: function componentWillUnmount() {
-						allStoreListener['delete'](this._storelistener);
-					}
-				}, {
-					key: 'render',
-					value: function render() {
-						return React.createElement(ConnectComponent, this.state);
-					}
-				}]);
-
-				return TinyFluxConnect;
-			})(Component);
+			});
 		}
 		return {
-			Component: Component,
-			Store: Store,
+			Component: {
+				createClass: createComponentClass
+			},
+			createComponent: createComponentClass,
+			Store: {
+				createClass: createStoreClass
+			},
+			createStore: createStoreClass,
 			connect: connect
 		};
 	};

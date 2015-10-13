@@ -1,7 +1,9 @@
-import SimpleListStore from './SimpleListStore'
+import SimpleListMixin from './SimpleListMixin'
+import {Store} from 'tinyflux';
 
-export default class StargazerStore extends SimpleListStore{
+export default Store.createClass({
+	mixins:[SimpleListMixin],
 	_getUrl(name){
 		return '/repos/'+name+'/stargazers';
 	}
-}
+});

@@ -1,7 +1,9 @@
-import SimpleStore from './SimpleStore'
+import SimpleMixin from './SimpleMixin';
+import {Store} from 'tinyflux';
 
-export default class RepoStore extends SimpleStore{
+export default Store.createClass({
+	mixins:[SimpleMixin],
 	_getUrl(name){
 		return '/repos/'+name;
 	}
-};
+});

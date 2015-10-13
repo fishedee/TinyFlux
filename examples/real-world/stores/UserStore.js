@@ -1,7 +1,9 @@
-import SimpleStore from './SimpleStore'
+import SimpleMixin from './SimpleMixin';
+import {Store} from 'tinyflux';
 
-export default class UserStore extends SimpleStore{
+export default Store.createClass({
+	mixins:[SimpleMixin],
 	_getUrl(name){
 		return '/users/'+name;
 	}
-};
+});

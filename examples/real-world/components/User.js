@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import TinyFlux from 'tinyflux';
+import {Component} from 'tinyflux';
 
-export default class User extends TinyFlux.Component{
+export default Component.createClass({
   render() {
     const { user } = this.props;
     const login = user.get('login');
@@ -20,4 +20,4 @@ export default class User extends TinyFlux.Component{
       </div>
     );
   }
-};
+});

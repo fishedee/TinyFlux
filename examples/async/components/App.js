@@ -1,21 +1,20 @@
-import React, { Component, PropTypes } from 'react';
-import TinyFlux from 'tinyflux';
+import React, {PropTypes } from 'react';
+import {Component,connect} from 'tinyflux';
 import Picker from './Picker';
 import Posts from './Post';
 import RedditStore from '../stores/RedditStore';
-import RedditAction from '../actions/RedditAction';
 import Immutable from 'immutable';
 
-let Items = TinyFlux.createComponent({
+let Items = Component.createClass({
   componentDidMount() {
     const { selectedReddit } = this.props;
-    RedditAction.fetchPostsIfNeeded(selectedReddit);
+    RedditStore.fetchPostsIfNeeded(selectedReddit);
   },
   handleRefreshClick(e) {
     e.preventDefault();
     const { selectedReddit } = this.props;
-    RedditAction.invalidateReddit(selectedReddit);
-    RedditAction.fetchPostsIfNeeded(selectedReddit);
+    RedditStore.invalidateReddit(selectedReddit);
+    RedditStore.fetchPostsIfNeeded(selectedReddit);
   },
   render(){
     const items = this.props.post.get('items');
@@ -54,9 +53,8 @@ let Items = TinyFlux.createComponent({
 });
 
 function mapStateToProps(){
-  let redditStoreData = RedditStore.getState();
   return {
-    post:redditStoreData.get(this.props.selectedReddit) || Immutable.fromJS({
+    post:RedditStore.get(this.props.selectedReddit) || Immutable.fromJS({
         isFetching:true,
         didInvalidate:false,
         items:[]
@@ -65,10 +63,10 @@ function mapStateToProps(){
   }
 }
 
-let ConnectItems = TinyFlux.connect(mapStateToProps,Items);
+let ConnectItems = connect(mapStateToProps,Items);
 
 
-export default TinyFlux.createComponent({
+export default Component.createClass({
   getInitialState(){
     return {
       selectedReddit:'reactjs'

@@ -1,17 +1,16 @@
 import React, { PropTypes } from 'react';
-import TinyFlux from 'tinyflux';
+import {Component,connect} from 'tinyflux';
 import Header from './components/Header';
 import MainSection from './components/MainSection';
 import TodoStore from './stores/TodoStore';
-import TodoAction from './actions/TodoAction';
 import 'todomvc-app-css/index.css';
 
-let App = TinyFlux.createComponent({
+let App = Component.createClass({
   render() {
     return (
       <div>
-        <Header addTodo={TodoAction.addTodo} />
-        <MainSection todos={this.props.todos} actions={TodoAction} />
+        <Header addTodo={TodoStore.addTodo} />
+        <MainSection todos={this.props.todos} actions={TodoStore} />
       </div>
     );
   }
@@ -19,11 +18,11 @@ let App = TinyFlux.createComponent({
 
 function mapStateToProps(){
   return {
-    todos:TodoStore.getState()
+    todos:TodoStore.get()
   }
 }
 
-let ConnectApp = TinyFlux.connect(mapStateToProps,App);
+let ConnectApp = connect(mapStateToProps,App);
 
 React.render(
 	<ConnectApp/>,

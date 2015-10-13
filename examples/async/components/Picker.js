@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
-import TinyFlux from 'tinyflux';
+import {Component} from 'tinyflux';
 
-export default TinyFlux.createComponent({
+export default Component.createClass({
   render() {
     const { value, onChange, options } = this.props;
 

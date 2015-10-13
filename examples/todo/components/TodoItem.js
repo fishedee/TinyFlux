@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
-import TinyFlux from 'tinyflux';
+import {Component} from 'tinyflux';
 import classnames from 'classnames';
 import TodoTextInput from './TodoTextInput';
 
-let TodoItem = TinyFlux.createComponent({
+let TodoItem = Component.createClass({
   getInitialState() {
     return {
       editing: false

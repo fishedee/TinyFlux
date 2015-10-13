@@ -1,15 +1,14 @@
-import TinyFlux from "tinyflux"
+import {Component,connect} from "tinyflux"
 import React from "react"
 import Store from "./store"
-import Action from "./action"
 
-let CounterApp = TinyFlux.createComponent({
+let CounterApp = Component.createClass({
 	render(){
 		return (
 			<div>
 				<div>{this.props.counter}</div>
-				<button onClick={Action.increment}>increment</button>
-				<button onClick={Action.decrement}>decrement</button>
+				<button onClick={Store.increment}>increment</button>
+				<button onClick={Store.decrement}>decrement</button>
 			</div>
 		);
 	}
@@ -17,7 +16,7 @@ let CounterApp = TinyFlux.createComponent({
 
 function mapStateToProps(){
 	return {
-		counter:Store.getState()
+		counter:Store.get()
 	}
 }
-export default TinyFlux.connect(mapStateToProps,CounterApp);
+export default connect(mapStateToProps,CounterApp);

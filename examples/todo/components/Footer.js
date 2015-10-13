@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import TinyFlux from 'tinyflux';
+import {Component} from 'tinyflux';
 import classnames from 'classnames';
 import { SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE } from '../constants/TodoFilters';
 
@@ -9,7 +9,7 @@ const FILTER_TITLES = {
   [SHOW_COMPLETED]: 'Completed'
 };
 
-let Footer = TinyFlux.createComponent({
+let Footer = Component.createClass({
   renderTodoCount() {
     const { activeCount } = this.props;
     const itemWord = activeCount === 1 ? 'item' : 'items';

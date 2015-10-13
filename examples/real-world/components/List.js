@@ -1,10 +1,7 @@
-import React, { Component, PropTypes } from 'react';
-import TinyFlux from 'tinyflux';
+import React, { PropTypes } from 'react';
+import {Component} from 'tinyflux';
 
-export default class List extends TinyFlux.Component{
-  constructor(){
-    super();
-  }
+export default Component.createClass({
   renderLoadMore() {
     const { isFetching, onLoadMoreClick } = this.props;
     return (
@@ -14,7 +11,7 @@ export default class List extends TinyFlux.Component{
         {isFetching ? 'Loading...' : 'Load More'}
       </button>
     );
-  }
+  },
 
   render() {
     const {
@@ -39,4 +36,4 @@ export default class List extends TinyFlux.Component{
       </div>
     );
   }
-};
+});

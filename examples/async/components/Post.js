@@ -1,7 +1,7 @@
-import React, { PropTypes, Component } from 'react';
-import TinyFlux from 'tinyflux';
+import React, { PropTypes } from 'react';
+import {Component} from 'tinyflux';
 
-export default TinyFlux.createComponent({
+export default Component.createClass({
   render() {
     return (
       <ul>

@@ -29,17 +29,34 @@ module.exports = function(React,Immutable){
 		return true;
 	}
 	
-	class Component extends React.Component{
+	let ImmutableMixin = {
 		shouldComponentUpdate(nextProps, nextState) {
 			return !shallowEqualImmutable(this.props, nextProps) ||
 				!shallowEqualImmutable(this.state, nextState);
 		}
-	}
+	};
 
 	let allStoreListener = new Set();
 	let hasTrigger = false;
-	class Store{
-		constructor(){
+	function createComponentClass(proto){
+		if( !proto.mixins )
+			proto.mixins = [];
+		proto.mixins.push(ImmutableMixin);
+		return React.createClass(proto);
+	}
+	function createStoreClass(proto){
+		if( proto.mixins ){
+			for( let singleMixin of proto.mixins ){
+				for( let methodName in singleMixin ){
+					let methodResult = singleMixin[methodName];
+					if( proto.hasOwnProperty(methodName))
+						continue;
+					proto[methodName] = methodResult;
+				}
+			}
+		}
+		function StoreClass(){
+			this._state = this.getInitialState(); 
 			this.__defineSetter__('state',(state)=>{
 				this._state = state;
 				if( allStoreListener.size == 0 )
@@ -57,32 +74,50 @@ module.exports = function(React,Immutable){
 			this.__defineGetter__('state',()=>{
 				return this._state;
 			});
+			for( let methodName in this ){
+				let methodResult = this[methodName];
+				if( typeof methodResult != 'function' )
+					continue;
+				if( methodName == 'getInitialState')
+					continue;
+				if( methodName.substr(0,1) == '_')
+					continue;
+				this[methodName] = methodResult.bind(this);
+			}
 		}
+		StoreClass.prototype = proto;
+		return StoreClass;
 	}
 	function connect(connectFilter,ConnectComponent){
-		return class TinyFluxConnect extends Component{
-			constructor(props){
-				super(props);
+		return createComponentClass({
+			getInitialState(){
+				this._connectFilter = connectFilter.bind(this);
 				this._storelistener = ()=>{
-					this.setState(connectFilter(this.props));
+					this.setState(this._connectFilter(this.props));
 				};
 				allStoreListener.add(this._storelistener);
-				this.state = connectFilter(props);
-			}
+				return this._connectFilter(this.props);
+			},
 			componentWillReceiveProps(nextProps){
-				this._storelistener(nextProps);
-			}
+				this.setState( this._connectFilter(nextProps) );
+			},
 			componentWillUnmount(){
 				allStoreListener.delete(this._storelistener);
-			}
+			},
 			render(){
 				return (<ConnectComponent {...this.state}/>);
 			}
-		};
+		});
 	}
 	return {
-		Component:Component,
-		Store:Store,
+		Component:{
+			createClass:createComponentClass
+		},
+		createComponent:createComponentClass,
+		Store:{
+			createClass:createStoreClass
+		},
+		createStore:createStoreClass,
 		connect:connect
 	};
 }
