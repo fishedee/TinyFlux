@@ -56,25 +56,24 @@ ONLY 1 MINUTE , YOU KNOW EVERYTHING ABOUT TINYFLUX
 import TinyFlux from 'tinyflux';
 
 //1.create Store by TinyFlux.createStore
-//2.set your getData function
-//3.set your action function (must be start with on) and call trigger when data change
+//2.set your action function
+//3.set your get function
 //ok that's all
-export default TinyFlux.createStore({
-	initialize(){
-		this.counter = 0;
+let Store = TinyFlux.createStore({
+	getInitialState(){
+		return 0;
 	},
-	onIncrement(){
-		this.counter++;
-		this.trigger();
+	increment(){
+		this.state++;
 	},
-	onDecrement(){
-		this.counter--;
-		this.trigger();
+	decrement(){
+		this.state--;
 	},
-	getData(){
-		return this.counter;
+	get(){
+		return this.state;
 	}
 });
+export default new Store();
 ```
 
 #### Component
@@ -84,30 +83,27 @@ import React from "react"
 import Store from "./store"
 
 //1.create Component by TinyFlux.createComponent
-//2.set your component listen to store
-//3.set data how to get from store
-//4.set action when event trigger
+//2.create mapStateToProps for map store data to component data
+//3.connect 1 and 2 
 //ok that's all
-export default React.createClass({
-	mixins:[TinyFlux.ComponentMixin],
-	initialize(){
-		this.listen(Store);
-	},
-	getData(){
-		return {
-			counter:Store.getData()
-		};
-	},
+let Component = TinyFlux.createComponent({
 	render(){
 		return (
 			<div>
-				<div>{this.state.counter}</div>
+				<div>{this.props.counter}</div>
 				<button onClick={Store.increment}>increment</button>
 				<button onClick={Store.decrement}>decrement</button>
 			</div>
 		);
 	}
 });
+
+function mapStateToProps(){
+	return {
+		counter:Store.get()
+	}
+}
+export default TinyFlux.connect(mapStateToProps,Component);
 ```
 
 ### License
