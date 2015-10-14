@@ -1,5 +1,5 @@
-let React = require('react-native');
-let Immutable = require('immutable');
-let TinyFluxHelper = require('./tinyflux.js');
+import React from 'react-native';
+import Immutable from 'immutable';
+import TinyFluxHelper from './tinyflux.js';
 
-module.exports = TinyFluxHelper(React,Immutable);
+export default TinyFluxHelper(React,Immutable);

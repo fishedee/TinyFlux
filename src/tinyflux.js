@@ -1,4 +1,4 @@
-module.exports = function(React,Immutable){
+export default function(React,Immutable){
 	let ImmutableIs = Immutable.is.bind(Immutable);
 
 	function shallowEqualImmutable(objA, objB) {

@@ -56,11 +56,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var React = __webpack_require__(3);
-	var Immutable = __webpack_require__(2);
-	var TinyFluxHelper = __webpack_require__(1);
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 
-	module.exports = TinyFluxHelper(React, Immutable);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _immutable = __webpack_require__(2);
+
+	var _immutable2 = _interopRequireDefault(_immutable);
+
+	var _tinyfluxJs = __webpack_require__(1);
+
+	var _tinyfluxJs2 = _interopRequireDefault(_tinyfluxJs);
+
+	exports['default'] = (0, _tinyfluxJs2['default'])(_react2['default'], _immutable2['default']);
+	module.exports = exports['default'];
 
 /***/ },
 /* 1 */
@@ -68,7 +83,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	module.exports = function (React, Immutable) {
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	exports['default'] = function (React, Immutable) {
 		var ImmutableIs = Immutable.is.bind(Immutable);
 
 		function shallowEqualImmutable(objA, objB) {
@@ -228,6 +247,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			connect: connect
 		};
 	};
+
+	module.exports = exports['default'];
 
 /***/ },
 /* 2 */
