@@ -74,6 +74,12 @@ export default function(React,Immutable){
 			this.__defineGetter__('state',()=>{
 				return this._state;
 			});
+			this.getState = function(){
+				return this.state;
+			}
+			this.setState = function(state){
+				this.state = state;
+			}
 			for( let methodName in this ){
 				let methodResult = this[methodName];
 				if( typeof methodResult != 'function' )
@@ -95,14 +101,18 @@ export default function(React,Immutable){
 				this._storelistener = ()=>{
 					this.setState(this._connectFilter(this.props));
 				};
-				allStoreListener.add(this._storelistener);
+				if( typeof window == 'object' ){
+					allStoreListener.add(this._storelistener);
+				}
 				return this._connectFilter(this.props);
 			},
 			componentWillReceiveProps(nextProps){
 				this.setState( this._connectFilter(nextProps) );
 			},
 			componentWillUnmount(){
-				allStoreListener.delete(this._storelistener);
+				if( typeof window == 'object' ){
+					allStoreListener.delete(this._storelistener);
+				}
 			},
 			render(){
 				return (<ConnectComponent {...this.state}/>);

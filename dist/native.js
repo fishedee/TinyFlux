@@ -201,6 +201,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.__defineGetter__('state', function () {
 					return _this._state;
 				});
+				this.getState = function () {
+					return this.state;
+				};
+				this.setState = function (state) {
+					this.state = state;
+				};
 				for (var methodName in this) {
 					var methodResult = this[methodName];
 					if (typeof methodResult != 'function') continue;
@@ -221,14 +227,18 @@ return /******/ (function(modules) { // webpackBootstrap
 					this._storelistener = function () {
 						_this2.setState(_this2._connectFilter(_this2.props));
 					};
-					allStoreListener.add(this._storelistener);
+					if (typeof window == 'object') {
+						allStoreListener.add(this._storelistener);
+					}
 					return this._connectFilter(this.props);
 				},
 				componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 					this.setState(this._connectFilter(nextProps));
 				},
 				componentWillUnmount: function componentWillUnmount() {
-					allStoreListener['delete'](this._storelistener);
+					if (typeof window == 'object') {
+						allStoreListener['delete'](this._storelistener);
+					}
 				},
 				render: function render() {
 					return React.createElement(ConnectComponent, this.state);
